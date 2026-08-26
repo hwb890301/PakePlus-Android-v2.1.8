@@ -1,1965 +1,2434 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>✨ 小祖宗の许愿单</title>
-    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>楼盘推荐助手 · 经纪人版</title>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js">
     </script>
     <style>
-        /* ===== CSS Variables & Reset ===== */
-        :root {
-            --bg-main: #eef6ef;
-            --bg-card: #ffffff;
-            --bg-sidebar: #f8fbf9;
-            --primary: #6ba88e;
-            --primary-light: #8cc4ab;
-            --primary-dark: #4f8a72;
-            --text-primary: #2d3e35;
-            --text-secondary: #6a7f74;
-            --text-light: #a0b5a8;
-            --shadow: 0 4px 20px rgba(107, 168, 142, 0.15);
-            --radius: 18px;
-            --radius-sm: 12px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
-        }
-
+        /* ===== 全局重置 & 字体 ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: var(--font);
-            background: var(--bg-main);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #F5F7FA;
+            color: #1C1C1E;
+            padding: 20px 16px 40px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 12px;
         }
 
-        .app {
+        .app-container {
+            max-width: 720px;
             width: 100%;
-            max-width: 430px;
-            height: 92vh;
-            max-height: 820px;
-            background: var(--bg-main);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
+        }
+
+        .app-header {
+            padding: 12px 0 20px 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            border-bottom: 1px solid #E5E5EA;
+            margin-bottom: 24px;
+        }
+        .app-header-left {
             display: flex;
             flex-direction: column;
-            position: relative;
-            border: 1px solid rgba(107, 168, 142, 0.12);
         }
-
-        .topbar {
-            background: var(--bg-main);
-            padding: 16px 20px 12px;
+        .app-title {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #1C1C1E;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            flex-shrink: 0;
-            border-bottom: 1px solid rgba(107, 168, 142, 0.08);
-            position: relative;
-            z-index: 10;
+            gap: 8px;
         }
-
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .app-title-icon {
+            font-size: 28px;
         }
-
-        .menu-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
-            background: var(--bg-card);
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(107, 168, 142, 0.08);
-            transition: var(--transition);
-            color: var(--text-primary);
-            font-family: var(--font);
-        }
-
-        .menu-btn:active {
-            transform: scale(0.92);
-        }
-
-        .topbar-title {
-            font-size: 24px;
+        .app-subtitle {
+            font-size: 13px;
+            color: #8E8E93;
+            margin-top: 2px;
             font-weight: 400;
-            letter-spacing: 0.5px;
-            color: var(--text-primary);
-            font-family: 'Patrick Hand', 'Comic Sans MS', cursive, var(--font);
-        }
-
-        .topbar-title span {
-            color: var(--primary);
-        }
-
-        .cart-btn-wrap {
-            position: relative;
-        }
-
-        .cart-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
-            background: var(--bg-card);
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
+            letter-spacing: 0.3px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px rgba(107, 168, 142, 0.08);
-            transition: var(--transition);
-            color: var(--text-primary);
-            font-family: var(--font);
+            gap: 6px;
+            flex-wrap: wrap;
         }
-
-        .cart-btn:active {
-            transform: scale(0.92);
+        .app-subtitle .highlight {
+            color: #1C1C1E;
+            font-weight: 500;
         }
-
-        .cart-badge {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            background: #e74c5e;
+        .app-subtitle .phone-icon {
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+        }
+        .app-subtitle .phone-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: #1C1C1E;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .app-header-badge {
+            background: #007AFF;
             color: #fff;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+            padding: 20px 18px;
+            margin-bottom: 18px;
+            transition: box-shadow 0.2s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1C1C1E;
+            margin-bottom: 14px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 6px rgba(231, 76, 94, 0.3);
-            transition: var(--transition);
-            opacity: 0;
-            transform: scale(0.5);
-            font-family: var(--font);
+            gap: 8px;
+            letter-spacing: 0.2px;
+            flex-wrap: wrap;
+        }
+        .card-title .badge {
+            font-size: 11px;
+            font-weight: 500;
+            color: #8E8E93;
+            background: #F2F2F7;
+            padding: 0 10px;
+            border-radius: 12px;
+            line-height: 20px;
+            margin-left: 4px;
         }
 
-        .cart-badge.show {
-            opacity: 1;
-            transform: scale(1);
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            margin-bottom: 14px;
         }
-
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px 16px 10px;
-            -webkit-overflow-scrolling: touch;
+        .form-group {
+            flex: 1 1 0;
+            min-width: 100px;
         }
-
-        .main-content::-webkit-scrollbar {
-            width: 3px;
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: #8E8E93;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
         }
-        .main-content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .main-content::-webkit-scrollbar-thumb {
-            background: var(--primary-light);
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #E5E5EA;
             border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            color: #1C1C1E;
+            background: #FAFAFC;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+            background: #FFFFFF;
+        }
+        .form-group input::placeholder {
+            color: #C7C7CC;
         }
 
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #F2F2F7;
+            color: #1C1C1E;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+        }
+        .btn:active {
+            transform: scale(0.97);
+        }
+        .btn-primary {
+            background: #007AFF;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #0066D9;
+        }
+        .btn-success {
+            background: #34C759;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #2DB84E;
+        }
+        .btn-danger {
+            background: #FF3B30;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #E6352B;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #D1D1D6;
+            color: #1C1C1E;
+        }
+        .btn-outline:hover {
+            background: #F2F2F7;
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 13px;
+            border-radius: 8px;
+        }
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        /* ===== 匹配结果分类区 ===== */
+        .category-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .category-box {
+            background: #F8F9FC;
+            border-radius: 12px;
+            padding: 12px 14px;
+            border: 1px solid #EFEFF4;
+            transition: border-color 0.2s;
+        }
+        .category-box.drag-over {
+            border-color: #007AFF;
+            background: #F0F5FF;
+        }
         .category-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
-            padding: 0 4px;
-        }
-
-        .category-header h2 {
-            font-size: 20px;
+            font-size: 14px;
             font-weight: 600;
-            color: var(--text-primary);
-            font-family: var(--font);
+            color: #1C1C1E;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #E5E5EA;
+        }
+        .category-header .count {
+            font-size: 12px;
+            font-weight: 400;
+            color: #8E8E93;
+        }
+        .category-list {
+            min-height: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .category-list .empty-hint {
+            color: #C7C7CC;
+            font-size: 13px;
+            text-align: center;
+            padding: 12px 0;
         }
 
-        .category-header h2 .emoji {
-            margin-right: 8px;
-        }
-
-        .add-item-btn {
-            background: var(--bg-card);
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(107, 168, 142, 0.1);
-            transition: var(--transition);
+        /* 匹配楼盘卡片（统一颜色） */
+        .match-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-family: var(--font);
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: #FFFFFF;
+            border-radius: 10px;
+            border-left: 4px solid #007AFF;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.15s, transform 0.1s;
+            cursor: grab;
+            flex-wrap: wrap;
+            gap: 6px;
         }
-
-        .add-item-btn:active {
-            transform: scale(0.88);
+        .match-item:active {
+            cursor: grabbing;
+        }
+        .match-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .match-item.dragging {
+            opacity: 0.4;
+            transform: scale(0.98);
+        }
+        .match-item .info {
+            flex: 1;
+            min-width: 0;
+        }
+        .match-item .info .name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1C1C1E;
+        }
+        .match-item .info .detail {
+            font-size: 12px;
+            color: #8E8E93;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            margin-top: 2px;
+        }
+        .match-item .info .detail .unit-tag {
+            background: #F0F0F5;
+            border-radius: 10px;
+            padding: 0 8px;
+            font-size: 11px;
+            line-height: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .match-item .info .detail .unit-tag img {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            object-fit: cover;
+        }
+        .match-item .remove-btn {
+            flex-shrink: 0;
+            color: #C7C7CC;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 4px;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+        .match-item .remove-btn:hover {
+            color: #FF3B30;
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: var(--text-light);
+            padding: 28px 10px;
+            color: #C7C7CC;
+            font-size: 14px;
         }
-
-        .empty-state .big-emoji {
-            font-size: 48px;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .empty-state p {
-            font-size: 15px;
-            line-height: 1.6;
-            font-family: var(--font);
-        }
-
-        .item-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            padding-bottom: 8px;
-        }
-
-        .item-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(107, 168, 142, 0.08);
-            transition: var(--transition);
-            position: relative;
-            cursor: default;
-            animation: cardIn 0.35s ease forwards;
-        }
-
-        .item-card:active {
-            transform: scale(0.97);
-        }
-
-        @keyframes cardIn {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .item-card .card-img {
-            width: 100%;
-            aspect-ratio: 1/1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            background: #e8f3ed;
-            position: relative;
-            overflow: hidden;
-            user-select: none;
-        }
-
-        .item-card .card-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .item-card .card-img .emoji-placeholder {
-            font-size: 52px;
-            line-height: 1;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .item-card .card-body {
-            padding: 10px 12px 12px;
-        }
-
-        .item-card .card-name {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-family: var(--font);
-        }
-
-        .item-card .card-address {
-            font-size: 11px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-family: var(--font);
-        }
-
-        .item-card .card-address::before {
-            content: "📍";
-            font-size: 10px;
-        }
-
-        .item-card .card-actions {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .item-card .add-to-cart {
-            background: var(--primary);
-            border: none;
-            color: #fff;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(107, 168, 142, 0.25);
-            font-family: var(--font);
-        }
-
-        .item-card .add-to-cart:active {
-            transform: scale(0.85);
-        }
-
-        .item-card .add-to-cart.added {
-            background: #e8f3ed;
-            color: var(--primary);
-            box-shadow: none;
-        }
-
-        .item-card .card-img .img-upload-btn {
-            position: absolute;
-            bottom: 6px;
-            right: 6px;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.85);
-            border: none;
-            font-size: 12px;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            font-family: var(--font);
-        }
-
-        .item-card .card-img .img-upload-btn:active {
-            transform: scale(0.88);
-        }
-
-        .item-card .card-img .img-upload-btn input {
-            display: none;
-        }
-
-        .sidebar-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(45, 62, 53, 0.3);
-            backdrop-filter: blur(6px);
-            z-index: 50;
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--transition);
-        }
-
-        .sidebar-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .sidebar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 280px;
-            max-width: 78%;
-            background: var(--bg-sidebar);
-            z-index: 60;
-            transform: translateX(-100%);
-            transition: var(--transition);
-            padding: 24px 20px 20px;
-            display: flex;
-            flex-direction: column;
-            border-radius: 0 var(--radius) var(--radius) 0;
-            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.06);
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .sidebar-close {
-            align-self: flex-end;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            padding: 4px;
-            margin-bottom: 8px;
-            font-family: var(--font);
-        }
-
-        .sidebar-close:active {
-            transform: scale(0.85);
-        }
-
-        .sidebar-title {
-            font-size: 22px;
-            font-weight: 400;
-            margin-bottom: 24px;
-            color: var(--text-primary);
-            padding-left: 4px;
-            font-family: 'Patrick Hand', 'Comic Sans MS', cursive, var(--font);
-            letter-spacing: 0.5px;
-        }
-
-        .sidebar-title small {
-            font-weight: 400;
-            font-size: 13px;
-            color: var(--text-light);
-            display: block;
-            margin-top: 2px;
-            font-family: var(--font);
-        }
-
-        .sidebar-categories {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .sidebar-cat {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            border-radius: var(--radius-sm);
-            border: none;
-            background: transparent;
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            width: 100%;
-            text-align: left;
-            font-family: var(--font);
-        }
-
-        .sidebar-cat .cat-emoji {
-            font-size: 22px;
-        }
-
-        .sidebar-cat:active {
-            transform: scale(0.96);
-        }
-
-        .sidebar-cat.active {
-            background: var(--bg-card);
-            color: var(--primary);
-            box-shadow: 0 2px 12px rgba(107, 168, 142, 0.08);
-            font-weight: 600;
-        }
-
-        .sidebar-cat .cat-count {
-            margin-left: auto;
-            font-size: 12px;
-            font-weight: 400;
-            color: var(--text-light);
-            background: var(--bg-main);
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-family: var(--font);
-        }
-
-        .sidebar-cat.active .cat-count {
-            background: var(--primary-light);
-            color: #fff;
-        }
-
-        .sidebar-footer {
-            border-top: 1px solid rgba(107, 168, 142, 0.08);
-            padding-top: 16px;
-            margin-top: 4px;
-        }
-
-        .sidebar-add-cat {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px dashed rgba(107, 168, 142, 0.2);
-            border-radius: var(--radius-sm);
-            background: transparent;
-            font-size: 15px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-family: var(--font);
-        }
-
-        .sidebar-add-cat:active {
-            transform: scale(0.96);
-        }
-        .sidebar-add-cat.solid {
-            border-style: solid;
-            border-color: var(--primary-light);
-            background: var(--bg-card);
-        }
-
-        .cart-modal-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(45, 62, 53, 0.35);
-            backdrop-filter: blur(8px);
-            z-index: 70;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--transition);
-            padding: 20px;
-        }
-
-        .cart-modal-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .cart-modal {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 400px;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-            transform: scale(0.92) translateY(20px);
-            transition: var(--transition);
-            overflow: hidden;
-        }
-
-        .cart-modal-overlay.open .cart-modal {
-            transform: scale(1) translateY(0);
-        }
-
-        .cart-modal-header {
-            padding: 18px 20px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(107, 168, 142, 0.06);
-            flex-shrink: 0;
-        }
-
-        .cart-modal-header h3 {
-            font-size: 18px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--font);
-        }
-
-        .cart-modal-header h3 .count {
-            font-size: 13px;
-            font-weight: 400;
-            color: var(--text-light);
-            background: var(--bg-main);
-            padding: 0 12px;
-            border-radius: 20px;
-            font-family: var(--font);
-        }
-
-        .cart-close-btn {
-            background: none;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            color: var(--text-light);
-            padding: 4px;
-            font-family: var(--font);
-        }
-
-        .cart-close-btn:active {
-            transform: scale(0.85);
-        }
-
-        .cart-list-wrap {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px 16px 8px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .cart-list-wrap::-webkit-scrollbar {
-            width: 3px;
-        }
-        .cart-list-wrap::-webkit-scrollbar-thumb {
-            background: var(--primary-light);
-            border-radius: 10px;
-        }
-
-        .cart-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            background: var(--bg-main);
-            border-radius: var(--radius-sm);
-            margin-bottom: 8px;
-            animation: cardIn 0.25s ease forwards;
-        }
-
-        .cart-item .ci-emoji {
-            font-size: 28px;
-            width: 40px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .cart-item .ci-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .cart-item .ci-name {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-primary);
-            font-family: var(--font);
-        }
-
-        .cart-item .ci-addr {
-            font-size: 11px;
-            color: var(--text-light);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-family: var(--font);
-        }
-
-        .cart-item .ci-remove {
-            background: none;
-            border: none;
-            color: var(--text-light);
-            font-size: 16px;
-            cursor: pointer;
-            padding: 4px 8px;
-            transition: var(--transition);
-            font-family: var(--font);
-        }
-
-        .cart-item .ci-remove:active {
-            transform: scale(0.85);
-            color: #e74c5e;
-        }
-
-        .cart-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-light);
-        }
-
-        .cart-empty .big-emoji {
+        .empty-state .icon {
             font-size: 40px;
             display: block;
             margin-bottom: 10px;
+            opacity: 0.5;
+        }
+        .empty-state .sub {
+            font-size: 12px;
+            color: #D1D1D6;
+            margin-top: 4px;
         }
 
-        .cart-empty p {
-            font-family: var(--font);
-            font-size: 15px;
-        }
-
-        .cart-modal-footer {
-            padding: 14px 20px 18px;
-            border-top: 1px solid rgba(107, 168, 142, 0.06);
+        /* 手动添加区域 */
+        .manual-add-area {
             display: flex;
-            gap: 12px;
+            gap: 10px;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #F0F0F5;
+            flex-wrap: wrap;
+        }
+        .manual-add-area select {
+            flex: 2;
+            min-width: 160px;
+            padding: 8px 12px;
+            border: 1px solid #E5E5EA;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #FAFAFC;
+            outline: none;
+            color: #1C1C1E;
+        }
+        .manual-add-area select:focus {
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.12);
+        }
+        .manual-add-area .btn {
             flex-shrink: 0;
         }
 
-        .cart-modal-footer .btn {
-            flex: 1;
-            padding: 12px 0;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
+        /* ===== 楼盘管理 ===== */
+        .building-list {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-family: var(--font);
-        }
-
-        .cart-modal-footer .btn:active {
-            transform: scale(0.96);
-        }
-
-        .btn-cancel {
-            background: var(--bg-main);
-            color: var(--text-secondary);
-        }
-
-        .btn-confirm {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(107, 168, 142, 0.3);
-        }
-
-        .btn-confirm:active {
-            box-shadow: 0 2px 8px rgba(107, 168, 142, 0.2);
-        }
-
-        .add-modal-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(45, 62, 53, 0.35);
-            backdrop-filter: blur(8px);
-            z-index: 80;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--transition);
-            padding: 20px;
-        }
-
-        .add-modal-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .add-modal {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            width: 100%;
-            max-width: 380px;
-            padding: 24px 22px 22px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-            transform: scale(0.92) translateY(20px);
-            transition: var(--transition);
-        }
-
-        .add-modal-overlay.open .add-modal {
-            transform: scale(1) translateY(0);
-        }
-
-        .add-modal h3 {
-            font-size: 19px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
-            font-family: var(--font);
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 2px;
         }
-
-        .add-modal .field {
-            margin-bottom: 14px;
+        .building-list::-webkit-scrollbar {
+            width: 4px;
         }
-
-        .add-modal .field label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-            font-family: var(--font);
+        .building-list::-webkit-scrollbar-thumb {
+            background: #D1D1D6;
+            border-radius: 8px;
         }
-
-        .add-modal .field input,
-        .add-modal .field textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid rgba(107, 168, 142, 0.12);
-            border-radius: var(--radius-sm);
-            font-size: 15px;
-            font-family: var(--font);
-            transition: var(--transition);
-            background: var(--bg-main);
-            color: var(--text-primary);
-        }
-
-        .add-modal .field input:focus,
-        .add-modal .field textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: var(--bg-card);
-            box-shadow: 0 0 0 4px rgba(107, 168, 142, 0.08);
-        }
-
-        .add-modal .field textarea {
-            resize: vertical;
-            min-height: 44px;
-        }
-
-        .add-modal .field .emoji-picker {
+        .building-list-item {
             display: flex;
-            gap: 6px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: #FAFAFC;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: background 0.15s;
             flex-wrap: wrap;
-            padding: 6px 0 2px;
+            gap: 6px;
         }
-
-        .add-modal .field .emoji-picker button {
-            width: 40px;
-            height: 40px;
-            border: 2px solid transparent;
-            border-radius: 50%;
-            font-size: 22px;
-            background: var(--bg-main);
+        .building-list-item:hover {
+            background: #F2F2F7;
+        }
+        .building-list-item .info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 16px;
+            align-items: center;
+        }
+        .building-list-item .info .name {
+            font-weight: 500;
+            color: #1C1C1E;
+        }
+        .building-list-item .info .meta {
+            color: #8E8E93;
+            font-size: 12px;
+        }
+        .building-list-item .info .unit-tag {
+            background: #E5E5EA;
+            border-radius: 10px;
+            padding: 0 8px;
+            font-size: 11px;
+            line-height: 20px;
+            color: #1C1C1E;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .building-list-item .del-btn,
+        .building-list-item .edit-btn {
+            color: #C7C7CC;
+            background: none;
+            border: none;
             cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font);
+            font-size: 16px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+        .building-list-item .del-btn:hover {
+            color: #FF3B30;
+            background: #FFECEB;
+        }
+        .building-list-item .edit-btn:hover {
+            color: #007AFF;
+            background: #E5F0FF;
         }
 
-        .add-modal .field .emoji-picker button:active {
-            transform: scale(0.88);
+        /* ===== 编辑模态框 ===== */
+        .edit-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
         }
-
-        .add-modal .field .emoji-picker button.selected {
-            border-color: var(--primary);
-            background: var(--bg-card);
-            box-shadow: 0 2px 8px rgba(107, 168, 142, 0.12);
+        .edit-modal.active {
+            display: flex;
         }
-
-        .add-modal .modal-actions {
+        .edit-modal-box {
+            background: #FFFFFF;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px 30px 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.3s ease;
+        }
+        .edit-modal-box .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #F0F0F5;
+        }
+        .edit-modal-box .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1C1C1E;
+        }
+        .edit-modal-box .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #C7C7CC;
+            cursor: pointer;
+            padding: 0 6px;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+        .edit-modal-box .modal-close:hover {
+            color: #1C1C1E;
+        }
+        .edit-modal-box .modal-footer {
             display: flex;
             gap: 12px;
-            margin-top: 18px;
+            justify-content: flex-end;
+            border-top: 1px solid #F0F0F5;
+            padding-top: 16px;
+            flex-wrap: wrap;
         }
 
-        .add-modal .modal-actions .btn {
-            flex: 1;
-            padding: 11px 0;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: var(--font);
+        /* ===== 户型表单 (复用) ===== */
+        .unit-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 12px;
+            background: #F8F9FC;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #EFEFF4;
         }
-
-        .add-modal .modal-actions .btn:active {
-            transform: scale(0.96);
+        .unit-row .unit-field {
+            flex: 1 1 120px;
+            min-width: 80px;
         }
-
-        .toast {
+        .unit-row .unit-field label {
+            font-size: 11px;
+            color: #8E8E93;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .unit-row .unit-field input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #FFFFFF;
+            outline: none;
+        }
+        .unit-row .unit-field input:focus {
+            border-color: #007AFF;
+        }
+        .unit-row .unit-field .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .unit-row .unit-field .file-input-wrapper input[type="file"] {
             position: absolute;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--text-primary);
-            color: #fff;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-size: 15px;
-            font-weight: 500;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-            z-index: 90;
+            left: 0;
+            top: 0;
             opacity: 0;
-            pointer-events: none;
-            transition: var(--transition);
-            white-space: nowrap;
-            font-family: var(--font);
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .unit-row .unit-field .file-input-wrapper .fake-btn {
+            background: #F0F0F5;
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-size: 12px;
+            color: #1C1C1E;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .unit-row .unit-field .file-input-wrapper .fake-btn:hover {
+            background: #E5E5EA;
+        }
+        .unit-row .unit-preview {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .unit-row .unit-preview img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #E5E5EA;
+        }
+        .unit-row .unit-remove {
+            color: #FF3B30;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 4px;
+            line-height: 1;
+        }
+        .add-unit-btn {
+            margin-top: 4px;
+            margin-bottom: 12px;
         }
 
+        /* ===== 打印样式 (一页纸) ===== */
+        #printArea {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 720px;
+            background: #FFFFFF;
+            padding: 32px 40px 30px;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Microsoft YaHei", serif;
+            color: #1C1C1E;
+            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.08);
+            border-radius: 4px;
+            z-index: 999;
+        }
+        #printArea .print-header {
+            text-align: center;
+            border-bottom: 1px solid #E5E5EA;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        #printArea .print-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #1C1C1E;
+        }
+        #printArea .print-sub {
+            font-size: 13px;
+            color: #8E8E93;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+        #printArea .print-client {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 30px;
+            justify-content: center;
+            background: #F8F9FC;
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+        #printArea .print-client .item {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+        #printArea .print-client .label {
+            color: #8E8E93;
+            font-weight: 400;
+        }
+        #printArea .print-client .value {
+            font-weight: 500;
+            color: #1C1C1E;
+        }
+        #printArea .print-list-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1C1C1E;
+            letter-spacing: 0.5px;
+        }
+        #printArea .print-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #printArea .print-list .item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            background: #FAFAFC;
+            border-radius: 10px;
+            border-left: 4px solid #007AFF;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+        #printArea .print-list .item .info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 16px;
+            align-items: center;
+            flex: 1;
+        }
+        #printArea .print-list .item .info .name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        #printArea .print-list .item .info .meta {
+            color: #8E8E93;
+            font-size: 13px;
+        }
+        #printArea .print-list .item .info .slogan {
+            font-size: 13px;
+            color: #1C1C1E;
+            background: #E8F0FE;
+            border-radius: 8px;
+            padding: 2px 12px;
+            line-height: 24px;
+            display: inline-block;
+        }
+        #printArea .print-list .item .info .unit-print {
+            background: #F0F0F5;
+            border-radius: 12px;
+            padding: 6px 16px;
+            font-size: 14px;
+            line-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #printArea .print-list .item .info .unit-print img {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #D1D1D6;
+        }
+        #printArea .print-list .item .info .unit-text {
+            background: #F0F0F5;
+            border-radius: 12px;
+            padding: 2px 12px;
+            font-size: 13px;
+            line-height: 26px;
+            color: #8E8E93;
+            display: inline-block;
+        }
+        #printArea .print-list .item .info .other-prefix {
+            font-size: 13px;
+            color: #8E8E93;
+            font-weight: 400;
+            margin-right: 4px;
+        }
+        #printArea .print-list .item .info .tag-print {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 0 12px;
+            border-radius: 12px;
+            background: #8E8E93;
+            color: #fff;
+            line-height: 20px;
+            letter-spacing: 0.3px;
+        }
+        #printArea .print-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #8E8E93;
+            border-top: 1px solid #F0F0F5;
+            padding-top: 14px;
+            letter-spacing: 0.5px;
+        }
+        #printArea .print-footer .highlight {
+            color: #1C1C1E;
+            font-weight: 500;
+        }
+
+        /* ===== 模态框 ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: #FFFFFF;
+            border-radius: 20px;
+            max-width: 760px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px 30px 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.3s ease;
+        }
+        .modal-box::-webkit-scrollbar {
+            width: 4px;
+        }
+        .modal-box::-webkit-scrollbar-thumb {
+            background: #D1D1D6;
+            border-radius: 8px;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #F0F0F5;
+        }
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1C1C1E;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #C7C7CC;
+            cursor: pointer;
+            padding: 0 6px;
+            line-height: 1;
+            transition: color 0.15s;
+        }
+        .modal-close:hover {
+            color: #1C1C1E;
+        }
+        .modal-body {
+            margin-bottom: 18px;
+        }
+        .modal-body .preview-placeholder {
+            background: #F8F9FC;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #C7C7CC;
+            font-size: 14px;
+        }
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            border-top: 1px solid #F0F0F5;
+            padding-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== Toast ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: rgba(28, 28, 30, 0.88);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
 
-        .screenshot-preview-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(45, 62, 53, 0.5);
-            backdrop-filter: blur(8px);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: var(--transition);
-            padding: 20px;
-        }
-
-        .screenshot-preview-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .screenshot-preview {
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            max-width: 400px;
-            width: 100%;
-            max-height: 80vh;
-            overflow: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-            transform: scale(0.92) translateY(20px);
-            transition: var(--transition);
-            padding: 16px;
-        }
-
-        .screenshot-preview-overlay.open .screenshot-preview {
-            transform: scale(1) translateY(0);
-        }
-
-        .screenshot-preview img {
-            width: 100%;
-            height: auto;
-            border-radius: var(--radius-sm);
-            display: block;
-        }
-
-        .screenshot-preview .preview-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .screenshot-preview .preview-actions .btn {
-            flex: 1;
-            padding: 11px 0;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-            font-family: var(--font);
-        }
-
-        .screenshot-preview .preview-actions .btn:active {
-            transform: scale(0.96);
-        }
-
-        .btn-download {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(107, 168, 142, 0.25);
-        }
-
-        .btn-close-preview {
-            background: var(--bg-main);
-            color: var(--text-secondary);
-        }
-
-        .main-content::-webkit-scrollbar,
-        .cart-list-wrap::-webkit-scrollbar,
-        .screenshot-preview::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .main-content::-webkit-scrollbar-thumb,
-        .cart-list-wrap::-webkit-scrollbar-thumb,
-        .screenshot-preview::-webkit-scrollbar-thumb {
-            background: var(--primary-light);
-            border-radius: 10px;
-        }
-
-        @media (max-width: 480px) {
+        /* ===== 响应式 ===== */
+        @media (max-width: 600px) {
             body {
-                padding: 0;
+                padding: 12px 10px 30px;
             }
-            .app {
-                max-height: 100vh;
-                height: 100vh;
-                border-radius: 0;
-                border: none;
-                max-width: 100%;
+            .card {
+                padding: 16px 14px;
             }
-            .sidebar {
-                border-radius: 0 var(--radius) var(--radius) 0;
+            .app-title {
+                font-size: 22px;
             }
-            .item-grid {
+            .app-header {
+                padding-bottom: 14px;
+                margin-bottom: 18px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .form-row {
                 gap: 10px;
             }
-            .item-card .card-body {
-                padding: 8px 10px 10px;
+            .form-group {
+                min-width: 80px;
             }
-            .item-card .card-name {
-                font-size: 13px;
+            .btn {
+                padding: 8px 16px;
+                font-size: 14px;
             }
-            .cart-modal {
-                max-height: 90vh;
+            .match-item {
+                padding: 10px 12px;
+                flex-wrap: wrap;
+            }
+            .match-item .info .name {
+                font-size: 14px;
+            }
+            .match-item .info .detail {
+                font-size: 11px;
+                gap: 4px 8px;
+            }
+            .manual-add-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .manual-add-area select {
+                flex: 1;
+            }
+            .modal-box {
+                padding: 20px 16px;
+                margin: 10px;
+            }
+            .edit-modal-box {
+                padding: 20px 16px;
+                margin: 10px;
+            }
+            #printArea {
+                width: 100%;
+                padding: 24px 18px;
+            }
+            #printArea .print-client {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .app-header-badge {
+                font-size: 10px;
+                padding: 3px 10px;
+            }
+            .unit-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .unit-row .unit-field {
+                flex: 1 1 auto;
+            }
+            .category-box {
+                padding: 10px 10px;
+            }
+        }
+        @media (max-width: 400px) {
+            .match-item .info .detail {
+                flex-direction: column;
+                gap: 2px;
+            }
+            .btn-group .btn {
+                flex: 1;
             }
         }
 
-        @media (min-width: 600px) {
-            .app {
-                max-width: 460px;
-                height: 88vh;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
             }
-            .item-grid {
-                gap: 16px;
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
 
-        .hidden {
-            display: none !important;
+        .mt-2 {
+            margin-top: 8px;
         }
-
+        .mb-1 {
+            margin-bottom: 6px;
+        }
         .flex-center {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 6px;
+        }
+        .text-muted {
+            color: #8E8E93;
+        }
+        .text-small {
+            font-size: 13px;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .w-full {
+            width: 100%;
         }
 
-        .sidebar-cat .cat-del {
-            margin-left: auto;
-            background: none;
-            border: none;
-            color: var(--text-light);
-            font-size: 14px;
-            cursor: pointer;
-            padding: 0 6px;
-            opacity: 0.4;
-            transition: var(--transition);
-            font-family: var(--font);
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
         }
-
-        .sidebar-cat:hover .cat-del {
-            opacity: 0.8;
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
-
-        .sidebar-cat .cat-del:active {
-            transform: scale(0.85);
-            color: #e74c5e;
-        }
-
-        .item-card .card-del {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            font-size: 12px;
-            cursor: pointer;
-            color: var(--text-light);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            opacity: 0;
-            font-family: var(--font);
-        }
-
-        .item-card:hover .card-del {
-            opacity: 0.6;
-        }
-
-        .item-card .card-del:active {
-            transform: scale(0.85);
-            color: #e74c5e;
-            opacity: 1;
-        }
-
-        @media (max-width: 480px) {
-            .item-card .card-del {
-                opacity: 0.4;
-            }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D1D6;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
 
-    <div class="app" id="app">
+    <div id="toast" class="toast"></div>
 
-        <!-- ===== Top Bar ===== -->
-        <header class="topbar">
-            <div class="topbar-left">
-                <button class="menu-btn" id="menuBtn" aria-label="菜单">☰</button>
-                <span class="topbar-title">✨ 小祖宗の<span>许愿单</span></span>
+    <div class="app-container">
+
+        <!-- 头部 -->
+        <header class="app-header">
+            <div class="app-header-left">
+                <div class="app-title">
+                    <span class="app-title-icon">🏠</span>
+                    楼盘推荐助手
+                </div>
+                <div class="app-subtitle">
+                    销售顾问：<span class="highlight">刘娜</span>
+                    <span class="phone-icon">
+                        <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.574 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </span>
+                    <span class="highlight">15822457154</span>
+                </div>
             </div>
-            <div class="cart-btn-wrap">
-                <button class="cart-btn" id="cartBtn" aria-label="购物清单">🛒</button>
-                <span class="cart-badge" id="cartBadge">0</span>
-            </div>
+            <span class="app-header-badge">v2.0 · 本地存储</span>
         </header>
 
-        <!-- ===== Main Content ===== -->
-        <main class="main-content" id="mainContent">
-            <!-- 动态渲染 -->
-        </main>
-
-        <!-- ===== Sidebar ===== -->
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
-        <nav class="sidebar" id="sidebar">
-            <button class="sidebar-close" id="sidebarClose">✕</button>
-            <div class="sidebar-title">
-                ✨ 仙女请下单
-                <small>点击切换 · 点击 ✕ 删除</small>
+        <!-- 客户信息 -->
+        <section class="card">
+            <div class="card-title">
+                📋 客户需求
+                <span class="badge">输入信息后自动匹配</span>
             </div>
-            <div class="sidebar-categories" id="sidebarCategories">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="clientName">客户姓名</label>
+                    <input type="text" id="clientName" placeholder="例如：张先生" />
+                </div>
+                <div class="form-group">
+                    <label for="clientBudget">预算（万元）</label>
+                    <input type="number" id="clientBudget" placeholder="例如：230" min="0" step="1" />
+                </div>
+                <div class="form-group">
+                    <label for="clientArea">需求面积（㎡）</label>
+                    <input type="number" id="clientArea" placeholder="例如：120" min="0" step="1" />
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" id="btnAutoMatch">🔍 自动匹配</button>
+                <button class="btn btn-outline" id="btnClearMatch">🗑 清空结果</button>
+                <button class="btn btn-outline" id="btnViewBuildings">📋 管理楼盘</button>
+            </div>
+        </section>
+
+        <!-- 匹配结果 -->
+        <section class="card" id="resultCard">
+            <div class="card-title">
+                📌 匹配结果
+                <span class="badge" id="resultCount">0 个楼盘</span>
+            </div>
+            <div class="category-container" id="categoryContainer">
                 <!-- 动态渲染 -->
             </div>
-            <div class="sidebar-footer">
-                <button class="sidebar-add-cat" id="addCategoryBtn">➕ 添加分类</button>
-                <div style="display:flex; gap:8px; margin-top:8px;">
-                    <button class="sidebar-add-cat solid" id="exportBtn" style="flex:1; padding:8px; font-size:14px;">📤 导出备份</button>
-                    <button class="sidebar-add-cat solid" id="importBtn" style="flex:1; padding:8px; font-size:14px;">📥 导入备份</button>
-                    <input type="file" id="importFileInput" accept=".json" style="display:none;">
-                </div>
-                <div style="margin-top: 6px; font-size: 11px; color: var(--text-light); text-align: center;">备份文件可存云端，换手机导入恢复</div>
+            <div class="manual-add-area">
+                <select id="manualSelect">
+                    <option value="">— 选择楼盘手动添加 —</option>
+                </select>
+                <button class="btn btn-success btn-sm" id="btnManualAdd">➕ 添加</button>
             </div>
-        </nav>
+        </section>
 
-        <!-- ===== Cart Modal ===== -->
-        <div class="cart-modal-overlay" id="cartModalOverlay">
-            <div class="cart-modal">
-                <div class="cart-modal-header">
-                    <h3>🛒 许愿清单 <span class="count" id="cartCountLabel">0</span></h3>
-                    <button class="cart-close-btn" id="cartCloseBtn">✕</button>
-                </div>
-                <div class="cart-list-wrap" id="cartListWrap">
-                    <!-- 动态渲染 -->
-                </div>
-                <div class="cart-modal-footer">
-                    <button class="btn btn-cancel" id="cartCancelBtn">清空</button>
-                    <button class="btn btn-confirm" id="cartConfirmBtn">✨ 许愿下单</button>
-                </div>
+        <!-- 操作按钮 -->
+        <section class="card" style="padding: 16px 18px;">
+            <div class="btn-group" style="margin:0;">
+                <button class="btn btn-primary btn-block" id="btnGenerate" style="flex:2;">
+                    📄 生成推荐指南（一页纸）
+                </button>
+                <button class="btn btn-outline" id="btnClearAll" style="flex:1;">
+                    🗑 清空
+                </button>
             </div>
-        </div>
+        </section>
 
-        <!-- ===== Add Item Modal ===== -->
-        <div class="add-modal-overlay" id="addModalOverlay">
-            <div class="add-modal">
-                <h3>➕ 添加美食</h3>
-                <div class="field">
-                    <label>名称</label>
-                    <input type="text" id="addName" placeholder="例如：汉堡王" maxlength="20">
-                </div>
-                <div class="field">
-                    <label>地址</label>
-                    <input type="text" id="addAddress" placeholder="例如：XX路88号">
-                </div>
-                <div class="field">
-                    <label>选择图标</label>
-                    <div class="emoji-picker" id="emojiPicker">
-                        <button data-emoji="🍔">🍔</button><button data-emoji="🍕">🍕</button>
-                        <button data-emoji="🍣">🍣</button><button data-emoji="🥩">🥩</button>
-                        <button data-emoji="🍜">🍜</button><button data-emoji="🥗">🥗</button>
-                        <button data-emoji="🍰">🍰</button><button data-emoji="🧋">🧋</button>
-                        <button data-emoji="☕">☕</button><button data-emoji="🍦">🍦</button>
-                        <button data-emoji="🍿">🍿</button><button data-emoji="🥜">🥜</button>
-                        <button data-emoji="🍪">🍪</button><button data-emoji="🧁">🧁</button>
+        <!-- 楼盘管理 -->
+        <section class="card" id="buildingManager" style="display:none;">
+            <div class="card-title">
+                🏗 楼盘管理
+                <span class="badge" id="buildingCount">0 个</span>
+                <button class="btn btn-sm btn-outline" id="btnCloseManager" style="margin-left:auto;padding:4px 12px;font-size:12px;">✕ 关闭</button>
+            </div>
+            <div style="margin-bottom:14px;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bName">楼盘名</label>
+                        <input type="text" id="bName" placeholder="如：翡翠花园" />
+                    </div>
+                    <div class="form-group">
+                        <label for="bLocation">位置</label>
+                        <input type="text" id="bLocation" placeholder="如：朝阳区" />
                     </div>
                 </div>
-                <div class="field">
-                    <label>或上传图片</label>
-                    <input type="file" id="addImageFile" accept="image/*">
-                </div>
-                <div class="modal-actions">
-                    <button class="btn btn-cancel" id="addCancelBtn">取消</button>
-                    <button class="btn btn-confirm" id="addConfirmBtn">添加</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== Add Category Modal ===== -->
-        <div class="add-modal-overlay" id="addCatModalOverlay">
-            <div class="add-modal">
-                <h3>📂 添加分类</h3>
-                <div class="field">
-                    <label>分类名称</label>
-                    <input type="text" id="addCatName" placeholder="例如：甜品" maxlength="10">
-                </div>
-                <div class="field">
-                    <label>选择图标</label>
-                    <div class="emoji-picker" id="catEmojiPicker">
-                        <button data-emoji="🍰">🍰</button><button data-emoji="🍣">🍣</button>
-                        <button data-emoji="🥘">🥘</button><button data-emoji="🍜">🍜</button>
-                        <button data-emoji="🥗">🥗</button><button data-emoji="🧁">🧁</button>
-                        <button data-emoji="🍦">🍦</button><button data-emoji="🥤">🥤</button>
-                        <button data-emoji="🍿">🍿</button><button data-emoji="🍪">🍪</button>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bMetro">地铁</label>
+                        <input type="text" id="bMetro" placeholder="如：1号线 国贸站" />
+                    </div>
+                    <div class="form-group">
+                        <label for="bSchool">学区</label>
+                        <input type="text" id="bSchool" placeholder="如：实验小学" />
                     </div>
                 </div>
-                <div class="modal-actions">
-                    <button class="btn btn-cancel" id="addCatCancelBtn">取消</button>
-                    <button class="btn btn-confirm" id="addCatConfirmBtn">创建</button>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1 1 100%;">
+                        <label for="bSlogan">项目卖点（一句话简介）</label>
+                        <input type="text" id="bSlogan" placeholder="如：核心地段，精装现房" />
+                    </div>
+                </div>
+                <div id="unitContainer">
+                    <!-- 户型行由JS动态渲染 -->
+                </div>
+                <button class="btn btn-outline btn-sm add-unit-btn" id="addUnitBtn">➕ 添加户型</button>
+                <button class="btn btn-primary btn-block" id="btnAddBuilding" style="margin-top:8px;">💾 保存楼盘</button>
+            </div>
+            <div id="buildingList" class="building-list">
+                <div class="empty-state" style="padding:16px 0;font-size:13px;">
+                    <span class="icon" style="font-size:28px;">📭</span>
+                    暂无楼盘，请添加
                 </div>
             </div>
+        </section>
+
+        <div style="text-align:center;font-size:12px;color:#C7C7CC;margin-top:8px;padding-bottom:8px;">
+            所有数据仅保存在本地浏览器中 · 支持导出图片
         </div>
-
-        <!-- ===== Screenshot Preview ===== -->
-        <div class="screenshot-preview-overlay" id="screenshotPreviewOverlay">
-            <div class="screenshot-preview" id="screenshotPreview">
-                <img id="screenshotImg" src="" alt="许愿单截图">
-                <div class="preview-actions">
-                    <button class="btn btn-close-preview" id="previewCloseBtn">关闭</button>
-                    <button class="btn btn-download" id="previewDownloadBtn">💾 保存图片</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== Toast ===== -->
-        <div class="toast" id="toast"></div>
-
     </div>
 
+    <!-- 预览模态框 -->
+    <div class="modal-overlay" id="previewModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h2>📄 推荐指南预览</h2>
+                <button class="modal-close" id="modalClose">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <div id="previewContent" style="background:#F8F9FC;border-radius:12px;padding:16px;min-height:280px;display:flex;align-items:center;justify-content:center;color:#C7C7CC;font-size:14px;">
+                    <span>⏳ 加载预览中...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="modalCancel">取消</button>
+                <button class="btn btn-primary" id="modalSaveImage">💾 保存图片</button>
+                <button class="btn btn-success" id="modalShareImage">📤 分享保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑楼盘模态框 -->
+    <div class="edit-modal" id="editModal">
+        <div class="edit-modal-box">
+            <div class="modal-header">
+                <h2>✏️ 编辑楼盘</h2>
+                <button class="modal-close" id="editClose">✕</button>
+            </div>
+            <div style="margin-bottom:14px;">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editName">楼盘名</label>
+                        <input type="text" id="editName" placeholder="如：翡翠花园" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editLocation">位置</label>
+                        <input type="text" id="editLocation" placeholder="如：朝阳区" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editMetro">地铁</label>
+                        <input type="text" id="editMetro" placeholder="如：1号线 国贸站" />
+                    </div>
+                    <div class="form-group">
+                        <label for="editSchool">学区</label>
+                        <input type="text" id="editSchool" placeholder="如：实验小学" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1 1 100%;">
+                        <label for="editSlogan">项目卖点（一句话简介）</label>
+                        <input type="text" id="editSlogan" placeholder="如：核心地段，精装现房" />
+                    </div>
+                </div>
+                <div id="editUnitContainer">
+                    <!-- 户型行由JS动态渲染 -->
+                </div>
+                <button class="btn btn-outline btn-sm add-unit-btn" id="editAddUnitBtn">➕ 添加户型</button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="editCancel">取消</button>
+                <button class="btn btn-primary" id="editSave">💾 保存修改</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 隐藏打印区 -->
+    <div id="printArea"></div>
+
     <script>
-        (function() {
-            'use strict';
+        // ================================================================
+        //  1. 数据库层 (IndexedDB)
+        // ================================================================
+        const DB_NAME = 'EstateRecommendDB';
+        const DB_VERSION = 7;
+        const STORE_BUILDINGS = 'buildings';
 
-            // ============================================================
-            //  Data — 三个分类 + 店铺列表
-            // ============================================================
-            const DEFAULT_CATEGORIES = [
-                { id: 'cat_restaurant', name: '餐厅', emoji: '🍽️' },
-                { id: 'cat_drink', name: '饮品', emoji: '🥤' },
-                { id: 'cat_snack', name: '零食', emoji: '🍿' },
-            ];
+        let db = null;
 
-            const DEFAULT_ITEMS = {
-                cat_restaurant: [
-                    { id: 'item_1', name: '大吉利火锅', address: '', emoji: '🍲', image: '' },
-                    { id: 'item_2', name: '海底捞', address: '', emoji: '🍲', image: '' },
-                    { id: 'item_3', name: '大渔铁板烧', address: '', emoji: '🥩', image: '' },
-                    { id: 'item_4', name: '老华洋饭庄', address: '', emoji: '🍜', image: '' },
-                    { id: 'item_5', name: '小四川', address: '', emoji: '🌶️', image: '' },
-                    { id: 'item_6', name: '奥城炸酱面', address: '', emoji: '🍜', image: '' },
-                    { id: 'item_7', name: '三姑肉饼', address: '', emoji: '🥮', image: '' },
-                    { id: 'item_8', name: '吉健鸡腿', address: '', emoji: '🍗', image: '' },
-                ],
-                cat_drink: [
-                    { id: 'item_9', name: '瑞幸', address: '', emoji: '☕', image: '' },
-                    { id: 'item_10', name: '星巴克', address: '', emoji: '☕', image: '' },
-                ],
-                cat_snack: [],
-            };
-
-            // ============================================================
-            //  State
-            // ============================================================
-            let state = {
-                categories: [],
-                items: {},
-                cart: [],
-                currentCategoryId: null,
-                selectedEmoji: '🍔',
-                selectedCatEmoji: '🍰',
-                editingCategoryId: null,
-            };
-
-            // ============================================================
-            //  DOM refs
-            // ============================================================
-            const $ = (sel) => document.querySelector(sel);
-            const mainContent = $('#mainContent');
-            const sidebar = $('#sidebar');
-            const sidebarOverlay = $('#sidebarOverlay');
-            const sidebarCategories = $('#sidebarCategories');
-            const menuBtn = $('#menuBtn');
-            const sidebarClose = $('#sidebarClose');
-            const cartBtn = $('#cartBtn');
-            const cartBadge = $('#cartBadge');
-            const cartModalOverlay = $('#cartModalOverlay');
-            const cartListWrap = $('#cartListWrap');
-            const cartCountLabel = $('#cartCountLabel');
-            const cartCloseBtn = $('#cartCloseBtn');
-            const cartCancelBtn = $('#cartCancelBtn');
-            const cartConfirmBtn = $('#cartConfirmBtn');
-            const addModalOverlay = $('#addModalOverlay');
-            const addName = $('#addName');
-            const addAddress = $('#addAddress');
-            const addImageFile = $('#addImageFile');
-            const addCancelBtn = $('#addCancelBtn');
-            const addConfirmBtn = $('#addConfirmBtn');
-            const emojiPicker = $('#emojiPicker');
-            const addCatModalOverlay = $('#addCatModalOverlay');
-            const addCatName = $('#addCatName');
-            const addCatCancelBtn = $('#addCatCancelBtn');
-            const addCatConfirmBtn = $('#addCatConfirmBtn');
-            const catEmojiPicker = $('#catEmojiPicker');
-            const addCategoryBtn = $('#addCategoryBtn');
-            const screenshotPreviewOverlay = $('#screenshotPreviewOverlay');
-            const screenshotImg = $('#screenshotImg');
-            const previewCloseBtn = $('#previewCloseBtn');
-            const previewDownloadBtn = $('#previewDownloadBtn');
-            const toast = $('#toast');
-            const exportBtn = $('#exportBtn');
-            const importBtn = $('#importBtn');
-            const importFileInput = $('#importFileInput');
-
-            // ============================================================
-            //  Storage
-            // ============================================================
-            function loadState() {
-                try {
-                    const raw = localStorage.getItem('diancan_app_state');
-                    if (raw) {
-                        const saved = JSON.parse(raw);
-                        state.categories = saved.categories || DEFAULT_CATEGORIES;
-                        state.items = saved.items || {};
-                        state.cart = saved.cart || [];
-                        state.categories.forEach(cat => {
-                            if (!state.items[cat.id]) state.items[cat.id] = [];
-                        });
-                        if (state.categories.length === 0) {
-                            state.categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-                            state.items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
-                        }
-                        state.currentCategoryId = state.categories[0]?.id || null;
-                        return;
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                request.onupgradeneeded = (e) => {
+                    const d = e.target.result;
+                    if (!d.objectStoreNames.contains(STORE_BUILDINGS)) {
+                        d.createObjectStore(STORE_BUILDINGS, { keyPath: 'id' });
                     }
-                } catch (e) { /* ignore */ }
-                state.categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-                state.items = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
-                state.cart = [];
-                state.currentCategoryId = state.categories[0]?.id || null;
-            }
+                };
+                request.onsuccess = (e) => {
+                    db = e.target.result;
+                    resolve(db);
+                };
+                request.onerror = (e) => {
+                    reject(e.target.error);
+                };
+            });
+        }
 
-            function saveState() {
-                try {
-                    localStorage.setItem('diancan_app_state', JSON.stringify({
-                        categories: state.categories,
-                        items: state.items,
-                        cart: state.cart,
-                    }));
-                } catch (e) { /* ignore */ }
-            }
+        function dbPut(storeName, data) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, 'readwrite');
+                const store = tx.objectStore(storeName);
+                const req = store.put(data);
+                req.onsuccess = () => resolve(data);
+                req.onerror = () => reject(req.error);
+            });
+        }
 
-            // ============================================================
-            //  Utils
-            // ============================================================
-            function genId() {
-                return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-            }
+        function dbDelete(storeName, id) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, 'readwrite');
+                const store = tx.objectStore(storeName);
+                const req = store.delete(id);
+                req.onsuccess = () => resolve(id);
+                req.onerror = () => reject(req.error);
+            });
+        }
 
-            function showToast(msg, duration = 1600) {
-                toast.textContent = msg;
-                toast.classList.add('show');
-                clearTimeout(toast._timer);
-                toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
-            }
+        function dbGetAll(storeName) {
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(storeName, 'readonly');
+                const store = tx.objectStore(storeName);
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
 
-            function getCategoryName(catId) {
-                const cat = state.categories.find(c => c.id === catId);
-                return cat ? cat.name : '未知';
-            }
+        // ================================================================
+        //  2. 数据管理
+        // ================================================================
+        let buildings = [];
+        let matchCategories = {
+            '首选': [],
+            '次选': [],
+            '可参考': []
+        };
+        let clientInfo = { name: '', budget: '', area: '' };
+        let tempUnits = []; // 用于添加/编辑的临时户型数组
+        let editingBuildingId = null; // 正在编辑的楼盘ID
 
-            function getItemById(itemId) {
-                for (const catId of Object.keys(state.items)) {
-                    const found = state.items[catId].find(it => it.id === itemId);
-                    if (found) return found;
-                }
-                return null;
-            }
+        function genId() {
+            return Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4);
+        }
 
-            // ============================================================
-            //  Render functions
-            // ============================================================
-            function renderMain() {
-                if (!state.currentCategoryId) {
-                    if (state.categories.length > 0) {
-                        state.currentCategoryId = state.categories[0].id;
-                    } else {
-                        mainContent.innerHTML =
-                            `<div class="empty-state"><span class="big-emoji">📭</span><p>还没有分类，点击左上角菜单<br>添加一个分类吧！</p></div>`;
-                        return;
+        async function loadBuildings() {
+            try {
+                buildings = await dbGetAll(STORE_BUILDINGS);
+                return buildings;
+            } catch (e) {
+                console.warn('加载楼盘失败', e);
+                buildings = [];
+                return [];
+            }
+        }
+
+        async function saveBuilding(data) {
+            if (!data.id) data.id = genId();
+            if (!Array.isArray(data.units)) data.units = [];
+            data.metro = data.metro || '';
+            data.school = data.school || '';
+            data.slogan = data.slogan || '';
+            await dbPut(STORE_BUILDINGS, data);
+            await loadBuildings();
+            return data;
+        }
+
+        async function removeBuilding(id) {
+            await dbDelete(STORE_BUILDINGS, id);
+            await loadBuildings();
+            for (const cat of Object.keys(matchCategories)) {
+                matchCategories[cat] = matchCategories[cat].filter(bid => bid !== id);
+            }
+            renderMatches();
+            updateCount();
+            populateManualSelect();
+            renderBuildingManager();
+        }
+
+        function getBuilding(id) {
+            return buildings.find(b => b.id === id);
+        }
+
+        // ================================================================
+        //  3. 匹配逻辑
+        // ================================================================
+        function autoMatch(budget) {
+            if (!budget) return [];
+            const b = parseFloat(budget);
+            if (isNaN(b) || b <= 0) return [];
+            const priceLow = b;
+            const priceHigh = b + 100;
+            const matchedIds = [];
+            for (const building of buildings) {
+                if (!building.units || building.units.length === 0) continue;
+                let matched = false;
+                for (const unit of building.units) {
+                    const uPrice = parseFloat(unit.price);
+                    if (isNaN(uPrice) || uPrice <= 0) continue;
+                    if (uPrice >= priceLow && uPrice <= priceHigh) {
+                        matched = true;
+                        break;
                     }
                 }
+                if (matched) matchedIds.push(building.id);
+            }
+            return matchedIds;
+        }
 
-                const cat = state.categories.find(c => c.id === state.currentCategoryId);
-                if (!cat) {
-                    if (state.categories.length > 0) {
-                        state.currentCategoryId = state.categories[0].id;
-                        renderMain();
-                        return;
-                    }
-                    mainContent.innerHTML =
-                        `<div class="empty-state"><span class="big-emoji">📭</span><p>还没有分类，点击左上角菜单<br>添加一个分类吧！</p></div>`;
-                    return;
-                }
+        // ================================================================
+        //  4. UI 渲染
+        // ================================================================
 
-                const items = state.items[cat.id] || [];
-                const emoji = cat.emoji || '📁';
-
-                let html = `
-                    <div class="category-header">
-                        <h2><span class="emoji">${emoji}</span> ${cat.name}</h2>
-                        <button class="add-item-btn" data-action="addItem">+</button>
+        function renderMatches() {
+            const container = document.getElementById('categoryContainer');
+            const categories = ['首选', '次选', '可参考'];
+            let html = '';
+            for (const cat of categories) {
+                const ids = matchCategories[cat] || [];
+                const count = ids.length;
+                html += `
+                    <div class="category-box" data-category="${cat}">
+                        <div class="category-header">
+                            <span>${cat} <span class="count">(${count})</span></span>
+                        </div>
+                        <div class="category-list" data-category="${cat}">
+                            ${ids.length === 0 ? '<div class="empty-hint">— 暂无楼盘 —</div>' : ''}
+                            ${ids.map(id => {
+                                const b = getBuilding(id);
+                                if (!b) return '';
+                                return renderMatchItem(b, cat);
+                            }).join('')}
+                        </div>
                     </div>
                 `;
+            }
+            container.innerHTML = html;
 
-                if (items.length === 0) {
-                    html +=
-                        `<div class="empty-state"><span class="big-emoji">🍽️</span><p>这个分类还是空的<br>点击右上角 <strong>+</strong> 添加美食吧</p></div>`;
-                } else {
-                    html += `<div class="item-grid">`;
-                    items.forEach(item => {
-                        const imageHtml = item.image ?
-                            `<img src="${item.image}" alt="${item.name}" loading="lazy">` :
-                            `<span class="emoji-placeholder">${item.emoji || '🍽️'}</span>`;
-                        const inCart = state.cart.includes(item.id);
-                        html += `
-                            <div class="item-card" data-item-id="${item.id}">
-                                <div class="card-img" style="background: ${getColorForEmoji(item.emoji || '🍽️')}">
-                                    ${imageHtml}
-                                    <button class="img-upload-btn" data-action="uploadImage" data-item-id="${item.id}">
-                                        📷<input type="file" accept="image/*" data-item-id="${item.id}">
-                                    </button>
-                                    <button class="card-del" data-action="deleteItem" data-item-id="${item.id}">✕</button>
-                                </div>
-                                <div class="card-body">
-                                    <div class="card-name">${item.name}</div>
-                                    <div class="card-address">${item.address || '暂无地址'}</div>
-                                    <div class="card-actions">
-                                        <button class="add-to-cart ${inCart ? 'added' : ''}" data-action="toggleCart" data-item-id="${item.id}">
-                                            ${inCart ? '✓' : '+'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+            container.querySelectorAll('.category-list').forEach(list => {
+                list.addEventListener('dragover', onDragOver);
+                list.addEventListener('drop', onDrop);
+            });
+
+            container.querySelectorAll('.match-item').forEach(item => {
+                item.addEventListener('dragstart', onDragStart);
+                item.addEventListener('dragend', onDragEnd);
+                const removeBtn = item.querySelector('.remove-btn');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = this.dataset.id;
+                        removeFromAllCategories(id);
                     });
-                    html += `</div>`;
                 }
+            });
 
-                mainContent.innerHTML = html;
-                updateBadge();
-            }
+            updateCount();
+            populateManualSelect();
+            saveMatchCategories();
+        }
 
-            function getColorForEmoji(emoji) {
-                const colors = [
-                    '#fce4d6', '#d5e8d0', '#f8d5d5', '#d5e0f0', '#f0e6d5',
-                    '#d5f0e6', '#f5d5e6', '#e6d5f5', '#d5f5e6', '#f5e6d5',
-                    '#d5e8f0', '#f0d5e6', '#e6f0d5', '#d5f0f0', '#f0e6d5',
-                ];
-                let hash = 0;
-                for (let i = 0; i < emoji.length; i++) {
-                    hash = emoji.charCodeAt(i) + ((hash << 5) - hash);
+        function renderMatchItem(building, category) {
+            let unitsHtml = '';
+            if (building.units && building.units.length) {
+                for (const u of building.units) {
+                    const img = u.image ? `<img src="${u.image}" alt="户型" />` : '';
+                    unitsHtml += `<span class="unit-tag">${img}${u.area}㎡·${u.price}万</span>`;
                 }
-                return colors[Math.abs(hash) % colors.length];
+            } else {
+                unitsHtml = '<span class="unit-tag">无户型</span>';
             }
-
-            function renderSidebar() {
-                let html = '';
-                state.categories.forEach(cat => {
-                    const count = (state.items[cat.id] || []).length;
-                    const active = cat.id === state.currentCategoryId ? 'active' : '';
-                    html += `
-                        <button class="sidebar-cat ${active}" data-cat-id="${cat.id}" data-action="switchCategory">
-                            <span class="cat-emoji">${cat.emoji || '📁'}</span> ${cat.name}
-                            <span class="cat-count">${count}</span>
-                            <span class="cat-del" data-action="deleteCategory" data-cat-id="${cat.id}">✕</span>
-                        </button>
-                    `;
-                });
-                sidebarCategories.innerHTML = html;
-            }
-
-            function renderCart() {
-                const items = state.cart.map(id => getItemById(id)).filter(Boolean);
-                const count = items.length;
-                cartCountLabel.textContent = count;
-
-                if (count === 0) {
-                    cartListWrap.innerHTML =
-                        `<div class="cart-empty"><span class="big-emoji">🛒</span><p>许愿清单还是空的<br>去添加一些美食吧！</p></div>`;
-                    return;
-                }
-
-                let html = '';
-                items.forEach(item => {
-                    const emoji = item.emoji || '🍽️';
-                    html += `
-                        <div class="cart-item" data-item-id="${item.id}">
-                            <span class="ci-emoji">${emoji}</span>
-                            <div class="ci-info">
-                                <div class="ci-name">${item.name}</div>
-                                <div class="ci-addr">${item.address || '暂无地址'}</div>
-                            </div>
-                            <button class="ci-remove" data-action="removeFromCart" data-item-id="${item.id}">✕</button>
+            const metro = building.metro ? `🚇 ${building.metro}` : '';
+            const school = building.school ? `🏫 ${building.school}` : '';
+            const extra = [metro, school].filter(Boolean).join(' · ');
+            return `
+                <div class="match-item" draggable="true" data-id="${building.id}" data-category="${category}">
+                    <div class="info">
+                        <div class="name">${building.name || '未命名'}</div>
+                        <div class="detail">
+                            <span>📍 ${building.location || '未填'}</span>
+                            ${extra ? `<span>${extra}</span>` : ''}
+                            ${unitsHtml}
                         </div>
-                    `;
-                });
-                cartListWrap.innerHTML = html;
-                updateBadge();
+                    </div>
+                    <button class="remove-btn" data-id="${building.id}" title="移除">✕</button>
+                </div>
+            `;
+        }
+
+        function updateCount() {
+            let total = 0;
+            for (const cat of Object.keys(matchCategories)) {
+                total += matchCategories[cat].length;
             }
+            document.getElementById('resultCount').textContent = total + ' 个楼盘';
+        }
 
-            function updateBadge() {
-                const count = state.cart.length;
-                cartBadge.textContent = count;
-                if (count > 0) cartBadge.classList.add('show');
-                else cartBadge.classList.remove('show');
+        function populateManualSelect() {
+            const sel = document.getElementById('manualSelect');
+            const allMatched = [];
+            for (const cat of Object.keys(matchCategories)) {
+                allMatched.push(...matchCategories[cat]);
             }
-
-            // ============================================================
-            //  Backup & Restore
-            // ============================================================
-            function exportData() {
-                const data = {
-                    categories: state.categories,
-                    items: state.items,
-                    cart: state.cart
-                };
-                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `许愿单备份_${new Date().toISOString().slice(0,10)}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                showToast('✅ 备份已导出，请保存到云端/微信');
+            const available = buildings.filter(b => !allMatched.includes(b.id));
+            sel.innerHTML = '<option value="">— 选择楼盘手动添加 —</option>';
+            for (const b of available) {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                const unitInfo = b.units && b.units.length ? b.units.map(u => `${u.area}㎡/${u.price}万`).join(' ') :
+                    '无户型';
+                opt.textContent = `${b.name} (${b.location || '位置未填'}) ${unitInfo}`;
+                sel.appendChild(opt);
             }
-
-            function importData(file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        if (!data.categories || !data.items) {
-                            showToast('❌ 备份文件格式无效');
-                            return;
-                        }
-                        if (!confirm('导入将覆盖当前所有数据，确认继续吗？')) return;
-                        state.categories = data.categories;
-                        state.items = data.items;
-                        state.cart = data.cart || [];
-                        state.categories.forEach(cat => {
-                            if (!state.items[cat.id]) state.items[cat.id] = [];
-                        });
-                        if (state.categories.length > 0) state.currentCategoryId = state.categories[0].id;
-                        saveState();
-                        renderMain();
-                        renderSidebar();
-                        updateBadge();
-                        showToast('✅ 数据恢复成功！');
-                        closeSidebar();
-                    } catch (err) {
-                        showToast('❌ 备份文件损坏或无效');
-                    }
-                };
-                reader.readAsText(file);
+            if (available.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = '— 无可添加的楼盘 —';
+                sel.appendChild(opt);
             }
+        }
 
-            // ============================================================
-            //  Modal helpers
-            // ============================================================
-            function openModal(overlay) { overlay.classList.add('open'); }
-
-            function closeModal(overlay) { overlay.classList.remove('open'); }
-
-            function openCart() { renderCart();
-                openModal(cartModalOverlay); }
-
-            function closeCart() { closeModal(cartModalOverlay); }
-
-            function openAddItem() {
-                state.editingCategoryId = state.currentCategoryId;
-                addName.value = '';
-                addAddress.value = '';
-                addImageFile.value = '';
-                state.selectedEmoji = '🍔';
-                emojiPicker.querySelectorAll('button').forEach(btn => {
-                    btn.classList.toggle('selected', btn.dataset.emoji === '🍔');
-                });
-                openModal(addModalOverlay);
-                setTimeout(() => addName.focus(), 300);
-            }
-
-            function closeAddItem() { closeModal(addModalOverlay); }
-
-            function openAddCategory() {
-                addCatName.value = '';
-                state.selectedCatEmoji = '🍰';
-                catEmojiPicker.querySelectorAll('button').forEach(btn => {
-                    btn.classList.toggle('selected', btn.dataset.emoji === '🍰');
-                });
-                openModal(addCatModalOverlay);
-                setTimeout(() => addCatName.focus(), 300);
-            }
-
-            function closeAddCategory() { closeModal(addCatModalOverlay); }
-
-            function openSidebar() { renderSidebar();
-                sidebar.classList.add('open');
-                sidebarOverlay.classList.add('open'); }
-
-            function closeSidebar() { sidebar.classList.remove('open');
-                sidebarOverlay.classList.remove('open'); }
-
-            // ============================================================
-            //  Event Handlers
-            // ============================================================
-            menuBtn.addEventListener('click', openSidebar);
-            sidebarClose.addEventListener('click', closeSidebar);
-            sidebarOverlay.addEventListener('click', closeSidebar);
-
-            // 导出导入
-            exportBtn.addEventListener('click', exportData);
-            importBtn.addEventListener('click', () => importFileInput.click());
-            importFileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    importData(e.target.files[0]);
-                    e.target.value = '';
+        function removeFromAllCategories(id) {
+            let removed = false;
+            for (const cat of Object.keys(matchCategories)) {
+                const idx = matchCategories[cat].indexOf(id);
+                if (idx !== -1) {
+                    matchCategories[cat].splice(idx, 1);
+                    removed = true;
                 }
-            });
+            }
+            if (removed) {
+                renderMatches();
+                showToast('已移除该楼盘');
+            }
+        }
 
-            sidebarCategories.addEventListener('click', (e) => {
-                const btn = e.target.closest('[data-action="switchCategory"]');
-                if (btn) {
-                    const catId = btn.dataset.catId;
-                    if (catId && state.currentCategoryId !== catId) {
-                        state.currentCategoryId = catId;
-                        renderMain();
-                        renderSidebar();
-                        closeSidebar();
-                        saveState();
-                    }
-                    return;
+        // ================================================================
+        //  5. 拖拽逻辑
+        // ================================================================
+
+        let dragData = null;
+
+        function onDragStart(e) {
+            const item = e.target.closest('.match-item');
+            if (!item) return;
+            dragData = {
+                id: item.dataset.id,
+                fromCategory: item.dataset.category,
+                element: item
+            };
+            item.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', item.dataset.id);
+        }
+
+        function onDragEnd(e) {
+            const item = e.target.closest('.match-item');
+            if (item) item.classList.remove('dragging');
+            document.querySelectorAll('.category-box').forEach(box => box.classList.remove('drag-over'));
+        }
+
+        function onDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            const box = e.target.closest('.category-box');
+            if (box) {
+                box.classList.add('drag-over');
+            }
+        }
+
+        function onDrop(e) {
+            e.preventDefault();
+            const targetList = e.target.closest('.category-list');
+            if (!targetList) return;
+            const targetCategory = targetList.dataset.category;
+            if (!targetCategory) return;
+            const id = e.dataTransfer.getData('text/plain');
+            if (!id) return;
+            const draggedItem = document.querySelector(`.match-item[data-id="${id}"]`);
+            if (!draggedItem) return;
+            let found = false;
+            for (const cat of Object.keys(matchCategories)) {
+                const idx = matchCategories[cat].indexOf(id);
+                if (idx !== -1) {
+                    matchCategories[cat].splice(idx, 1);
+                    found = true;
+                    break;
                 }
-                const del = e.target.closest('[data-action="deleteCategory"]');
-                if (del) {
-                    e.stopPropagation();
-                    const catId = del.dataset.catId;
-                    if (state.categories.length <= 1) { showToast('至少保留一个分类哦'); return; }
-                    if (confirm(`确定要删除分类「${getCategoryName(catId)}」吗？`)) {
-                        state.categories = state.categories.filter(c => c.id !== catId);
-                        delete state.items[catId];
-                        const allItemIds = Object.values(state.items).flat().map(it => it.id);
-                        state.cart = state.cart.filter(id => allItemIds.includes(id));
-                        if (state.currentCategoryId === catId) {
-                            state.currentCategoryId = state.categories[0]?.id || null;
-                        }
-                        renderMain();
-                        renderSidebar();
-                        saveState();
-                        showToast('已删除分类');
-                    }
-                }
-            });
-
-            addCategoryBtn.addEventListener('click', openAddCategory);
-            addCatCancelBtn.addEventListener('click', closeAddCategory);
-            addCatConfirmBtn.addEventListener('click', () => {
-                const name = addCatName.value.trim();
-                if (!name) { showToast('请输入分类名称'); return; }
-                const emoji = state.selectedCatEmoji || '📁';
-                const newCat = { id: 'cat_' + genId(), name, emoji };
-                state.categories.push(newCat);
-                state.items[newCat.id] = [];
-                state.currentCategoryId = newCat.id;
-                renderMain();
-                renderSidebar();
-                saveState();
-                closeAddCategory();
-                showToast(`已创建分类「${name}」`);
-            });
-
-            catEmojiPicker.addEventListener('click', (e) => {
-                const btn = e.target.closest('button');
-                if (btn) {
-                    catEmojiPicker.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    state.selectedCatEmoji = btn.dataset.emoji;
-                }
-            });
-
-            emojiPicker.addEventListener('click', (e) => {
-                const btn = e.target.closest('button');
-                if (btn) {
-                    emojiPicker.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    state.selectedEmoji = btn.dataset.emoji;
-                }
-            });
-
-            addCancelBtn.addEventListener('click', closeAddItem);
-            addConfirmBtn.addEventListener('click', () => {
-                const name = addName.value.trim();
-                if (!name) { showToast('请输入名称'); return; }
-                const address = addAddress.value.trim() || '暂无地址';
-                const emoji = state.selectedEmoji || '🍽️';
-                let image = '';
-                const file = addImageFile.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        image = e.target.result;
-                        doAddItem(name, address, emoji, image);
-                    };
-                    reader.readAsDataURL(file);
+            }
+            if (!found) return;
+            if (!matchCategories[targetCategory]) matchCategories[targetCategory] = [];
+            const dropTarget = e.target.closest('.match-item');
+            if (dropTarget && dropTarget.dataset.id !== id) {
+                const targetId = dropTarget.dataset.id;
+                const idx = matchCategories[targetCategory].indexOf(targetId);
+                if (idx !== -1) {
+                    matchCategories[targetCategory].splice(idx, 0, id);
                 } else {
-                    doAddItem(name, address, emoji, image);
+                    matchCategories[targetCategory].push(id);
                 }
-            });
-
-            function doAddItem(name, address, emoji, image) {
-                const catId = state.editingCategoryId || state.currentCategoryId;
-                if (!catId) { showToast('请先选择分类'); return; }
-                const newItem = { id: 'item_' + genId(), name, address, emoji, image: image || '' };
-                if (!state.items[catId]) state.items[catId] = [];
-                state.items[catId].push(newItem);
-                renderMain();
-                renderSidebar();
-                saveState();
-                closeAddItem();
-                showToast(`已添加「${name}」`);
+            } else {
+                matchCategories[targetCategory].push(id);
             }
+            renderMatches();
+            showToast(`已移至「${targetCategory}」`);
+            saveMatchCategories();
+        }
 
-            mainContent.addEventListener('change', (e) => {
-                const input = e.target.closest('input[type="file"]');
-                if (input && input.closest('[data-action="uploadImage"]')) {
-                    const file = input.files[0];
-                    if (!file) return;
-                    const itemId = input.dataset.itemId;
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const dataUrl = e.target.result;
-                        for (const catId of Object.keys(state.items)) {
-                            const item = state.items[catId].find(it => it.id === itemId);
-                            if (item) {
-                                item.image = dataUrl;
-                                saveState();
-                                renderMain();
-                                showToast('图片已更新');
-                                break;
-                            }
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
+        // ================================================================
+        //  6. 楼盘管理 UI (含编辑)
+        // ================================================================
 
-            mainContent.addEventListener('click', (e) => {
-                const btn = e.target.closest('[data-action="uploadImage"]');
-                if (btn) {
-                    const input = btn.querySelector('input[type="file"]');
-                    if (input) input.click();
-                }
-                const del = e.target.closest('[data-action="deleteItem"]');
-                if (del) {
-                    e.stopPropagation();
-                    const itemId = del.dataset.itemId;
-                    const item = getItemById(itemId);
-                    if (!item) return;
-                    if (confirm(`确定要删除「${item.name}」吗？`)) {
-                        for (const catId of Object.keys(state.items)) {
-                            const idx = state.items[catId].findIndex(it => it.id === itemId);
-                            if (idx !== -1) {
-                                state.items[catId].splice(idx, 1);
-                                state.cart = state.cart.filter(id => id !== itemId);
-                                renderMain();
-                                renderSidebar();
-                                saveState();
-                                showToast(`已删除「${item.name}」`);
-                                break;
-                            }
-                        }
+        function renderBuildingManager() {
+            const container = document.getElementById('buildingList');
+            document.getElementById('buildingCount').textContent = buildings.length + ' 个';
+            if (buildings.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="padding:16px 0;font-size:13px;">
+                        <span class="icon" style="font-size:28px;">📭</span>
+                        暂无楼盘，请添加
+                    </div>
+                `;
+                return;
+            }
+            let html = '';
+            for (const b of buildings) {
+                const unitText = b.units && b.units.length ?
+                    b.units.map(u => `<span class="unit-tag">${u.area}㎡·${u.price}万${u.image ? ' 🖼' : ''}</span>`).join(
+                    ' ') :
+                    '<span class="unit-tag">无户型</span>';
+                const metro = b.metro ? `🚇 ${b.metro}` : '';
+                const school = b.school ? `🏫 ${b.school}` : '';
+                const slogan = b.slogan ? `✨ ${b.slogan}` : '';
+                html += `
+                    <div class="building-list-item">
+                        <div class="info">
+                            <span class="name">${b.name || '未命名'}</span>
+                            <span class="meta">📍 ${b.location || '--'}</span>
+                            ${metro ? `<span class="meta">${metro}</span>` : ''}
+                            ${school ? `<span class="meta">${school}</span>` : ''}
+                            ${slogan ? `<span class="meta" style="color:#1C1C1E;">${slogan}</span>` : ''}
+                            ${unitText}
+                        </div>
+                        <div>
+                            <button class="edit-btn" data-id="${b.id}" title="编辑">✎</button>
+                            <button class="del-btn" data-id="${b.id}" title="删除">✕</button>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+            container.querySelectorAll('.del-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    if (confirm('确定要删除这个楼盘吗？')) {
+                        removeBuilding(id).then(() => {
+                            renderBuildingManager();
+                            populateManualSelect();
+                            renderMatches();
+                            showToast('已删除楼盘');
+                        });
                     }
-                }
-                const cartToggle = e.target.closest('[data-action="toggleCart"]');
-                if (cartToggle) {
-                    const itemId = cartToggle.dataset.itemId;
-                    const idx = state.cart.indexOf(itemId);
-                    if (idx === -1) {
-                        state.cart.push(itemId);
-                        showToast('已加入许愿清单 ✨');
-                    } else {
-                        state.cart.splice(idx, 1);
-                        showToast('已移除');
-                    }
-                    renderMain();
-                    renderSidebar();
-                    updateBadge();
-                    saveState();
-                }
-                const addItemBtn = e.target.closest('[data-action="addItem"]');
-                if (addItemBtn) openAddItem();
+                });
             });
-
-            cartBtn.addEventListener('click', openCart);
-            cartCloseBtn.addEventListener('click', closeCart);
-            cartCancelBtn.addEventListener('click', () => {
-                if (state.cart.length === 0) return;
-                if (confirm('确定要清空许愿清单吗？')) {
-                    state.cart = [];
-                    renderCart();
-                    renderMain();
-                    updateBadge();
-                    saveState();
-                    showToast('已清空');
-                }
+            container.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    openEditModal(id);
+                });
             });
+        }
 
-            cartListWrap.addEventListener('click', (e) => {
-                const btn = e.target.closest('[data-action="removeFromCart"]');
-                if (btn) {
-                    const itemId = btn.dataset.itemId;
-                    state.cart = state.cart.filter(id => id !== itemId);
-                    renderCart();
-                    renderMain();
-                    updateBadge();
-                    saveState();
-                    showToast('已移除');
-                }
-            });
+        // ================================================================
+        //  7. 编辑功能
+        // ================================================================
 
-            cartConfirmBtn.addEventListener('click', async () => {
-                if (state.cart.length === 0) { showToast('许愿清单是空的，先添加一些美食吧'); return; }
-                try {
-                    cartConfirmBtn.textContent = '⏳ 生成中...';
-                    cartConfirmBtn.disabled = true;
-                    const cartItems = state.cart.map(id => getItemById(id)).filter(Boolean);
-                    const container = document.createElement('div');
-                    container.style.cssText = `
-                        padding: 32px 28px; background: #f0f7f0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-                        max-width: 480px; border-radius: 20px; box-shadow: 0 8px 40px rgba(0,0,0,0.06);
-                    `;
-                    container.innerHTML = `
-                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;border-bottom:2px solid rgba(107,168,142,0.15);padding-bottom:14px;">
-                            <span style="font-size:28px;">✨</span>
-                            <div>
-                                <div style="font-size:24px;font-weight:400;color:#2d3e35;font-family: 'Patrick Hand', 'Comic Sans MS', cursive, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;">
-                                    小祖宗の许愿单
-                                </div>
-                                <div style="font-size:13px;color:#6a7f74;">${new Date().toLocaleString()}</div>
+        function openEditModal(id) {
+            const building = getBuilding(id);
+            if (!building) return;
+            editingBuildingId = id;
+            // 填充表单
+            document.getElementById('editName').value = building.name || '';
+            document.getElementById('editLocation').value = building.location || '';
+            document.getElementById('editMetro').value = building.metro || '';
+            document.getElementById('editSchool').value = building.school || '';
+            document.getElementById('editSlogan').value = building.slogan || '';
+            // 填充户型
+            tempUnits = building.units ? building.units.map(u => ({
+                area: u.area || '',
+                price: u.price || '',
+                image: u.image || ''
+            })) : [];
+            renderEditUnitRows();
+            document.getElementById('editModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            document.body.style.overflow = '';
+            editingBuildingId = null;
+        }
+
+        function renderEditUnitRows() {
+            const container = document.getElementById('editUnitContainer');
+            if (tempUnits.length === 0) {
+                container.innerHTML = `<div style="color:#C7C7CC;font-size:13px;padding:8px 0;">暂无户型，请点击下方添加</div>`;
+                return;
+            }
+            let html = '';
+            tempUnits.forEach((unit, index) => {
+                const imgHtml = unit.image ? `<img src="${unit.image}" alt="户型图" />` : '';
+                html += `
+                    <div class="unit-row" data-index="${index}">
+                        <div class="unit-field">
+                            <label>面积 (㎡)</label>
+                            <input type="number" class="unit-area" value="${unit.area || ''}" placeholder="如 120" min="0" step="1" />
+                        </div>
+                        <div class="unit-field">
+                            <label>均价 (万元)</label>
+                            <input type="number" class="unit-price" value="${unit.price || ''}" placeholder="如 230" min="0" step="1" />
+                        </div>
+                        <div class="unit-field">
+                            <label>户型图</label>
+                            <div class="file-input-wrapper">
+                                <span class="fake-btn">📷 上传</span>
+                                <input type="file" class="unit-image-input" accept="image/*" />
                             </div>
-                            <span style="margin-left:auto;background:#6ba88e;color:#fff;font-size:14px;padding:2px 14px;border-radius:20px;">${cartItems.length} 件</span>
+                            <div class="unit-preview">
+                                ${imgHtml}
+                            </div>
                         </div>
-                        <div style="display:flex;flex-direction:column;gap:10px;">
-                            ${cartItems.map(item => `
-                                <div style="display:flex;align-items:center;gap:14px;background:#fff;padding:12px 16px;border-radius:14px;box-shadow:0 2px 8px rgba(107,168,142,0.06);">
-                                    <span style="font-size:32px;width:44px;text-align:center;">${item.emoji || '🍽️'}</span>
-                                    <div style="flex:1;min-width:0;">
-                                        <div style="font-size:16px;font-weight:500;color:#2d3e35;">${item.name}</div>
-                                        <div style="font-size:12px;color:#6a7f74;display:flex;align-items:center;gap:4px;">
-                                            <span>📍</span> ${item.address || '暂无地址'}
-                                        </div>
-                                    </div>
-                                    <span style="color:#6ba88e;font-size:18px;">✓</span>
-                                </div>
-                            `).join('')}
+                        <button class="unit-remove" data-index="${index}">✕</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            container.querySelectorAll('.unit-row').forEach((row) => {
+                const idx = parseInt(row.dataset.index);
+                const areaInput = row.querySelector('.unit-area');
+                const priceInput = row.querySelector('.unit-price');
+                const fileInput = row.querySelector('.unit-image-input');
+                const preview = row.querySelector('.unit-preview');
+
+                areaInput.addEventListener('input', function() {
+                    tempUnits[idx].area = this.value;
+                });
+                priceInput.addEventListener('input', function() {
+                    tempUnits[idx].price = this.value;
+                });
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            tempUnits[idx].image = ev.target.result;
+                            preview.innerHTML =
+                                `<img src="${ev.target.result}" alt="户型图" style="width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid #E5E5EA;" />`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                const removeBtn = row.querySelector('.unit-remove');
+                removeBtn.addEventListener('click', function() {
+                    tempUnits.splice(idx, 1);
+                    renderEditUnitRows();
+                });
+            });
+        }
+
+        document.getElementById('editAddUnitBtn').addEventListener('click', function() {
+            tempUnits.push({ area: '', price: '', image: '' });
+            renderEditUnitRows();
+        });
+
+        document.getElementById('editClose').addEventListener('click', closeEditModal);
+        document.getElementById('editCancel').addEventListener('click', closeEditModal);
+
+        document.getElementById('editSave').addEventListener('click', async function() {
+            const id = editingBuildingId;
+            if (!id) return;
+            const name = document.getElementById('editName').value.trim();
+            const location = document.getElementById('editLocation').value.trim();
+            const metro = document.getElementById('editMetro').value.trim();
+            const school = document.getElementById('editSchool').value.trim();
+            const slogan = document.getElementById('editSlogan').value.trim();
+
+            if (!name) { showToast('⚠️ 请填写楼盘名'); return; }
+            if (!location) { showToast('⚠️ 请填写位置'); return; }
+
+            // 收集户型
+            const units = [];
+            const rows = document.querySelectorAll('#editUnitContainer .unit-row');
+            let valid = true;
+            rows.forEach((row, idx) => {
+                const area = row.querySelector('.unit-area').value.trim();
+                const price = row.querySelector('.unit-price').value.trim();
+                const image = tempUnits[idx]?.image || '';
+                if (!area || isNaN(area) || parseFloat(area) <= 0) {
+                    showToast(`⚠️ 户型 ${idx+1} 面积无效`);
+                    valid = false;
+                    return;
+                }
+                if (!price || isNaN(price) || parseFloat(price) <= 0) {
+                    showToast(`⚠️ 户型 ${idx+1} 均价无效`);
+                    valid = false;
+                    return;
+                }
+                units.push({
+                    area: parseFloat(area),
+                    price: parseFloat(price),
+                    image: image
+                });
+            });
+            if (!valid) return;
+            if (units.length === 0) {
+                showToast('⚠️ 请至少添加一个户型');
+                return;
+            }
+
+            const updatedBuilding = {
+                id: id,
+                name,
+                location,
+                metro,
+                school,
+                slogan,
+                units: units
+            };
+
+            try {
+                await saveBuilding(updatedBuilding);
+                renderBuildingManager();
+                populateManualSelect();
+                renderMatches();
+                closeEditModal();
+                showToast('✅ 楼盘更新成功！');
+            } catch (e) {
+                console.error(e);
+                showToast('❌ 更新失败，请重试');
+            }
+        });
+
+        // ================================================================
+        //  8. 添加楼盘 (复用原有逻辑)
+        // ================================================================
+
+        function renderUnitRows() {
+            const container = document.getElementById('unitContainer');
+            if (tempUnits.length === 0) {
+                container.innerHTML = `<div style="color:#C7C7CC;font-size:13px;padding:8px 0;">暂无户型，请点击下方添加</div>`;
+                return;
+            }
+            let html = '';
+            tempUnits.forEach((unit, index) => {
+                const imgHtml = unit.image ? `<img src="${unit.image}" alt="户型图" />` : '';
+                html += `
+                    <div class="unit-row" data-index="${index}">
+                        <div class="unit-field">
+                            <label>面积 (㎡)</label>
+                            <input type="number" class="unit-area" value="${unit.area || ''}" placeholder="如 120" min="0" step="1" />
                         </div>
-                        <div style="margin-top:18px;text-align:center;font-size:16px;color:#6a7f74;border-top:1px solid rgba(107,168,142,0.08);padding-top:14px;font-family: 'Patrick Hand', 'Comic Sans MS', cursive, -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;">
-                            ✨ 马上为小仙女实现 ✨
+                        <div class="unit-field">
+                            <label>均价 (万元)</label>
+                            <input type="number" class="unit-price" value="${unit.price || ''}" placeholder="如 230" min="0" step="1" />
+                        </div>
+                        <div class="unit-field">
+                            <label>户型图</label>
+                            <div class="file-input-wrapper">
+                                <span class="fake-btn">📷 上传</span>
+                                <input type="file" class="unit-image-input" accept="image/*" />
+                            </div>
+                            <div class="unit-preview">
+                                ${imgHtml}
+                            </div>
+                        </div>
+                        <button class="unit-remove" data-index="${index}">✕</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+
+            container.querySelectorAll('.unit-row').forEach((row) => {
+                const idx = parseInt(row.dataset.index);
+                const areaInput = row.querySelector('.unit-area');
+                const priceInput = row.querySelector('.unit-price');
+                const fileInput = row.querySelector('.unit-image-input');
+                const preview = row.querySelector('.unit-preview');
+
+                areaInput.addEventListener('input', function() {
+                    tempUnits[idx].area = this.value;
+                });
+                priceInput.addEventListener('input', function() {
+                    tempUnits[idx].price = this.value;
+                });
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            tempUnits[idx].image = ev.target.result;
+                            preview.innerHTML =
+                                `<img src="${ev.target.result}" alt="户型图" style="width:40px;height:40px;border-radius:6px;object-fit:cover;border:1px solid #E5E5EA;" />`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                const removeBtn = row.querySelector('.unit-remove');
+                removeBtn.addEventListener('click', function() {
+                    tempUnits.splice(idx, 1);
+                    renderUnitRows();
+                });
+            });
+        }
+
+        document.getElementById('addUnitBtn').addEventListener('click', function() {
+            tempUnits.push({ area: '', price: '', image: '' });
+            renderUnitRows();
+        });
+
+        document.getElementById('btnAddBuilding').addEventListener('click', async function() {
+            const name = document.getElementById('bName').value.trim();
+            const location = document.getElementById('bLocation').value.trim();
+            const metro = document.getElementById('bMetro').value.trim();
+            const school = document.getElementById('bSchool').value.trim();
+            const slogan = document.getElementById('bSlogan').value.trim();
+
+            if (!name) { showToast('⚠️ 请填写楼盘名'); return; }
+            if (!location) { showToast('⚠️ 请填写位置'); return; }
+
+            const units = [];
+            const rows = document.querySelectorAll('#unitContainer .unit-row');
+            let valid = true;
+            rows.forEach((row, idx) => {
+                const area = row.querySelector('.unit-area').value.trim();
+                const price = row.querySelector('.unit-price').value.trim();
+                const image = tempUnits[idx]?.image || '';
+                if (!area || isNaN(area) || parseFloat(area) <= 0) {
+                    showToast(`⚠️ 户型 ${idx+1} 面积无效`);
+                    valid = false;
+                    return;
+                }
+                if (!price || isNaN(price) || parseFloat(price) <= 0) {
+                    showToast(`⚠️ 户型 ${idx+1} 均价无效`);
+                    valid = false;
+                    return;
+                }
+                units.push({
+                    area: parseFloat(area),
+                    price: parseFloat(price),
+                    image: image
+                });
+            });
+            if (!valid) return;
+            if (units.length === 0) {
+                showToast('⚠️ 请至少添加一个户型');
+                return;
+            }
+
+            const newBuilding = {
+                id: genId(),
+                name,
+                location,
+                metro,
+                school,
+                slogan,
+                units: units
+            };
+
+            try {
+                await saveBuilding(newBuilding);
+                renderBuildingManager();
+                populateManualSelect();
+                document.getElementById('bName').value = '';
+                document.getElementById('bLocation').value = '';
+                document.getElementById('bMetro').value = '';
+                document.getElementById('bSchool').value = '';
+                document.getElementById('bSlogan').value = '';
+                tempUnits = [];
+                renderUnitRows();
+                showToast('✅ 楼盘添加成功！');
+            } catch (e) {
+                console.error(e);
+                showToast('❌ 添加失败，请重试');
+            }
+        });
+
+        // ================================================================
+        //  9. 一页纸生成
+        // ================================================================
+
+        function buildPrintContent() {
+            const area = document.getElementById('printArea');
+            const name = clientInfo.name || '未填写';
+            const budget = clientInfo.budget || '--';
+            const areaReq = clientInfo.area || '--';
+            const budgetNum = parseFloat(clientInfo.budget);
+            const isValidBudget = !isNaN(budgetNum) && budgetNum > 0;
+
+            const categories = ['首选', '次选', '可参考'];
+            let allIds = [];
+            for (const cat of categories) {
+                allIds = allIds.concat(matchCategories[cat] || []);
+            }
+
+            let listHtml = '';
+            if (allIds.length === 0) {
+                listHtml = `
+                    <div style="text-align:center;padding:30px 0;color:#C7C7CC;font-size:14px;">
+                        暂无推荐楼盘，请先完成匹配。
+                    </div>
+                `;
+            } else {
+                for (const id of allIds) {
+                    const b = getBuilding(id);
+                    if (!b) continue;
+                    let allUnits = b.units || [];
+                    if (allUnits.length === 0) continue;
+
+                    let category = '其他';
+                    for (const cat of categories) {
+                        if ((matchCategories[cat] || []).includes(id)) {
+                            category = cat;
+                            break;
+                        }
+                    }
+                    const tag = `<span class="tag-print" style="background:#8E8E93;">${category}</span>`;
+
+                    const matchedUnits = [];
+                    const otherUnits = [];
+                    for (const u of allUnits) {
+                        const uPrice = parseFloat(u.price);
+                        const isMatched = isValidBudget && !isNaN(uPrice) && uPrice >= budgetNum && uPrice <= budgetNum + 100;
+                        if (isMatched) {
+                            matchedUnits.push(u);
+                        } else {
+                            otherUnits.push(u);
+                        }
+                    }
+
+                    let unitsPrint = '';
+                    for (const u of matchedUnits) {
+                        const img = u.image ? `<img src="${u.image}" alt="户型图" />` : '';
+                        unitsPrint +=
+                            `<span class="unit-print">${img} ${u.area}㎡ · ${u.price}万</span>`;
+                    }
+                    if (otherUnits.length > 0) {
+                        unitsPrint += `<span class="other-prefix">其他在售户型：</span>`;
+                        for (const u of otherUnits) {
+                            unitsPrint += `<span class="unit-text">${u.area}㎡ · ${u.price}万</span>`;
+                        }
+                    }
+
+                    const metroText = b.metro ? `🚇 ${b.metro}` : '';
+                    const schoolText = b.school ? `🏫 ${b.school}` : '';
+                    const extra = [metroText, schoolText].filter(Boolean).join(' · ');
+                    const sloganHtml = b.slogan ? `<span class="slogan">✨ ${b.slogan}</span>` : '';
+
+                    listHtml += `
+                        <div class="item">
+                            <div class="info">
+                                <span class="name">${b.name || '未命名'}</span>
+                                ${tag}
+                                ${sloganHtml}
+                                <span class="meta">📍 ${b.location || '位置未填'}</span>
+                                ${extra ? `<span class="meta">${extra}</span>` : ''}
+                                ${unitsPrint}
+                            </div>
                         </div>
                     `;
-                    document.body.appendChild(container);
-                    const canvas = await html2canvas(container, { scale: 2, useCORS: true, backgroundColor: '#f0f7f0',
-                        logging: false, width: container.scrollWidth, height: container.scrollHeight });
-                    document.body.removeChild(container);
-                    screenshotImg.src = canvas.toDataURL('image/png');
-                    openModal(screenshotPreviewOverlay);
-                    closeCart();
-                    showToast('🎉 许愿完成！');
-                } catch (err) {
-                    console.error(err);
-                    showToast('生成截图失败，请重试');
-                } finally {
-                    cartConfirmBtn.textContent = '✨ 许愿下单';
-                    cartConfirmBtn.disabled = false;
                 }
-            });
-
-            previewCloseBtn.addEventListener('click', () => closeModal(screenshotPreviewOverlay));
-            previewDownloadBtn.addEventListener('click', () => {
-                const link = document.createElement('a');
-                link.download = `许愿单_${new Date().toISOString().slice(0,10)}.png`;
-                link.href = screenshotImg.src;
-                link.click();
-                showToast('💾 图片已保存');
-            });
-
-            screenshotPreviewOverlay.addEventListener('click', (e) => {
-                if (e.target === screenshotPreviewOverlay) closeModal(screenshotPreviewOverlay);
-            });
-            cartModalOverlay.addEventListener('click', (e) => {
-                if (e.target === cartModalOverlay) closeCart();
-            });
-            addModalOverlay.addEventListener('click', (e) => {
-                if (e.target === addModalOverlay) closeAddItem();
-            });
-            addCatModalOverlay.addEventListener('click', (e) => {
-                if (e.target === addCatModalOverlay) closeAddCategory();
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    if (screenshotPreviewOverlay.classList.contains('open')) closeModal(screenshotPreviewOverlay);
-                    else if (cartModalOverlay.classList.contains('open')) closeCart();
-                    else if (addModalOverlay.classList.contains('open')) closeAddItem();
-                    else if (addCatModalOverlay.classList.contains('open')) closeAddCategory();
-                    else if (sidebar.classList.contains('open')) closeSidebar();
-                }
-            });
-
-            // ============================================================
-            //  Init
-            // ============================================================
-            loadState();
-            renderMain();
-            renderSidebar();
-            updateBadge();
-            if (state.currentCategoryId && !state.categories.find(c => c.id === state.currentCategoryId)) {
-                state.currentCategoryId = state.categories[0]?.id || null;
-                renderMain();
             }
-            console.log('✨ 小祖宗の许愿单已启动！ 店铺已就绪 🍽️☕');
 
-        })();
+            if (listHtml.trim() === '') {
+                listHtml = `
+                    <div style="text-align:center;padding:30px 0;color:#C7C7CC;font-size:14px;">
+                        暂无符合预算的户型推荐，请调整预算或添加更多楼盘。
+                    </div>
+                `;
+            }
+
+            const now = new Date();
+            const dateStr = now.getFullYear() + '年' +
+                String(now.getMonth() + 1).padStart(2, '0') + '月' +
+                String(now.getDate()).padStart(2, '0') + '日';
+
+            area.innerHTML = `
+                <div class="print-header">
+                    <div class="print-title">推荐楼盘参考</div>
+                    <div class="print-sub">定制专属于您的置业计划</div>
+                </div>
+                <div class="print-client">
+                    <div class="item"><span class="label">客户姓名：</span><span class="value">${name}</span></div>
+                    <div class="item"><span class="label">预算范围：</span><span class="value">${budget} 万元</span></div>
+                    <div class="item"><span class="label">需求面积：</span><span class="value">${areaReq} ㎡</span></div>
+                    <div class="item"><span class="label">销售顾问：</span><span class="value">刘娜 📞 15822457154</span></div>
+                    <div class="item"><span class="label">推荐日：</span><span class="value">${dateStr}</span></div>
+                </div>
+                <div class="print-list-title">📌 推荐楼盘（${allIds.filter(id => {
+                    const b = getBuilding(id);
+                    return b && b.units && b.units.length > 0;
+                }).length} 个）</div>
+                <div class="print-list">
+                    ${listHtml}
+                </div>
+                <div class="print-footer">
+                    <span>价格以到访日价格为准，推荐价格为均价，仅供参考</span>
+                </div>
+            `;
+        }
+
+        // ================================================================
+        //  10. 保存图片功能 (下载 + 分享)
+        // ================================================================
+
+        async function generateImageBlob() {
+            const printArea = document.getElementById('printArea');
+            buildPrintContent();
+            const canvas = await html2canvas(printArea, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#FFFFFF',
+                logging: false,
+                width: 720,
+                height: printArea.scrollHeight,
+            });
+            return new Promise((resolve) => {
+                canvas.toBlob((blob) => {
+                    resolve({ blob, canvas });
+                }, 'image/png');
+            });
+        }
+
+        async function downloadImage() {
+            showToast('⏳ 正在生成图片...');
+            try {
+                const { blob, canvas } = await generateImageBlob();
+                const link = document.createElement('a');
+                link.download = `推荐指南_${clientInfo.name || '客户'}_${new Date().toISOString().slice(0,10)}.png`;
+                link.href = URL.createObjectURL(blob);
+                link.click();
+                URL.revokeObjectURL(link.href);
+                showToast('✅ 图片已下载！');
+            } catch (err) {
+                console.error(err);
+                showToast('❌ 生成失败，请重试');
+            }
+        }
+
+        async function shareImage() {
+            // 检查是否支持分享API
+            if (!navigator.share) {
+                // 如果不支持，降级为下载
+                showToast('⚠️ 当前浏览器不支持分享，将转为下载');
+                await downloadImage();
+                return;
+            }
+            showToast('⏳ 正在准备分享...');
+            try {
+                const { blob } = await generateImageBlob();
+                const file = new File([blob], `推荐指南_${clientInfo.name || '客户'}.png`, { type: 'image/png' });
+                await navigator.share({
+                    title: '楼盘推荐指南',
+                    files: [file]
+                });
+                showToast('✅ 分享成功！');
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.error(err);
+                    showToast('❌ 分享失败，请尝试下载');
+                } else {
+                    showToast('已取消分享');
+                }
+            }
+        }
+
+        // ================================================================
+        //  11. 模态框预览
+        // ================================================================
+
+        function showPreviewModal() {
+            const modal = document.getElementById('previewModal');
+            const content = document.getElementById('previewContent');
+
+            buildPrintContent();
+            const printArea = document.getElementById('printArea');
+            const clone = printArea.cloneNode(true);
+            clone.style.position = 'relative';
+            clone.style.left = 'auto';
+            clone.style.top = 'auto';
+            clone.style.width = '100%';
+            clone.style.boxShadow = 'none';
+            clone.style.borderRadius = '0';
+            clone.style.padding = '28px 30px 24px';
+            clone.style.background = '#FFFFFF';
+
+            content.innerHTML = '';
+            content.style.padding = '0';
+            content.style.background = '#F8F9FC';
+            content.style.borderRadius = '12px';
+            content.style.overflow = 'auto';
+            content.style.maxHeight = '65vh';
+            content.appendChild(clone);
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hidePreviewModal() {
+            document.getElementById('previewModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ================================================================
+        //  12. Toast
+        // ================================================================
+
+        let toastTimer = null;
+
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                el.classList.remove('show');
+            }, 2500);
+        }
+
+        // ================================================================
+        //  13. 存储匹配分类
+        // ================================================================
+
+        function saveMatchCategories() {
+            try {
+                localStorage.setItem('matchCategories', JSON.stringify(matchCategories));
+            } catch (e) {}
+        }
+
+        function loadMatchCategories() {
+            try {
+                const saved = localStorage.getItem('matchCategories');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    for (const cat of ['首选', '次选', '可参考']) {
+                        if (!parsed[cat]) parsed[cat] = [];
+                    }
+                    matchCategories = parsed;
+                } else {
+                    matchCategories = { '首选': [], '次选': [], '可参考': [] };
+                }
+            } catch (e) {
+                matchCategories = { '首选': [], '次选': [], '可参考': [] };
+            }
+        }
+
+        // ================================================================
+        //  14. 初始化
+        // ================================================================
+
+        function createSampleBuilding() {
+            return {
+                id: 'sample_' + Date.now(),
+                name: '翡翠花园',
+                location: '朝阳区 望京',
+                metro: '15号线 望京东站',
+                school: '北京景山学校朝阳分校',
+                slogan: '核心地段，精装现房',
+                units: [
+                    { area: 120, price: 230, image: '' },
+                    { area: 150, price: 280, image: '' },
+                    { area: 90, price: 180, image: '' }
+                ]
+            };
+        }
+
+        async function init() {
+            try {
+                await openDB();
+                await loadBuildings();
+
+                if (buildings.length === 0) {
+                    const sample = createSampleBuilding();
+                    await saveBuilding(sample);
+                    await loadBuildings();
+                    showToast('🏢 已自动添加示例楼盘');
+                }
+
+                loadMatchCategories();
+
+                const savedClient = localStorage.getItem('clientInfo');
+                if (savedClient) {
+                    try {
+                        const c = JSON.parse(savedClient);
+                        clientInfo = c;
+                        document.getElementById('clientName').value = c.name || '';
+                        document.getElementById('clientBudget').value = c.budget || '';
+                        document.getElementById('clientArea').value = c.area || '';
+                    } catch (e) {}
+                }
+
+                renderMatches();
+                populateManualSelect();
+                renderBuildingManager();
+                renderUnitRows();
+
+            } catch (e) {
+                console.error('初始化失败', e);
+                showToast('⚠️ 数据加载失败，请刷新重试');
+            }
+
+            // ---- 事件绑定 ----
+
+            document.getElementById('btnAutoMatch').addEventListener('click', function() {
+                const name = document.getElementById('clientName').value.trim();
+                const budget = document.getElementById('clientBudget').value.trim();
+                const area = document.getElementById('clientArea').value.trim();
+
+                if (!name) { showToast('⚠️ 请填写客户姓名'); return; }
+                if (!budget) { showToast('⚠️ 请填写预算'); return; }
+
+                clientInfo = { name, budget, area };
+                localStorage.setItem('clientInfo', JSON.stringify(clientInfo));
+
+                const matchedIds = autoMatch(budget);
+                matchCategories = { '首选': [], '次选': [], '可参考': [] };
+                matchCategories['首选'] = matchedIds;
+                renderMatches();
+                saveMatchCategories();
+
+                const count = matchedIds.length;
+                showToast(`✅ 自动匹配完成，共 ${count} 个楼盘`);
+                if (count === 0) {
+                    showToast('⚠️ 没有找到匹配的楼盘，请调整预算或手动添加');
+                }
+            });
+
+            document.getElementById('btnManualAdd').addEventListener('click', function() {
+                const sel = document.getElementById('manualSelect');
+                const id = sel.value;
+                if (!id) { showToast('⚠️ 请先选择一个楼盘'); return; }
+                let exists = false;
+                for (const cat of Object.keys(matchCategories)) {
+                    if (matchCategories[cat].includes(id)) { exists = true; break; }
+                }
+                if (exists) {
+                    showToast('⚠️ 该楼盘已在列表中');
+                    return;
+                }
+                matchCategories['首选'].push(id);
+                renderMatches();
+                saveMatchCategories();
+                showToast('✅ 已手动添加楼盘');
+            });
+
+            document.getElementById('btnClearMatch').addEventListener('click', function() {
+                let total = 0;
+                for (const cat of Object.keys(matchCategories)) {
+                    total += matchCategories[cat].length;
+                }
+                if (total === 0) {
+                    showToast('⚠️ 当前没有匹配结果');
+                    return;
+                }
+                matchCategories = { '首选': [], '次选': [], '可参考': [] };
+                renderMatches();
+                saveMatchCategories();
+                showToast('🗑 已清空所有匹配结果');
+            });
+
+            document.getElementById('btnClearAll').addEventListener('click', function() {
+                if (!confirm('确定要清空所有数据吗？（客户信息 + 匹配结果）')) return;
+                document.getElementById('clientName').value = '';
+                document.getElementById('clientBudget').value = '';
+                document.getElementById('clientArea').value = '';
+                clientInfo = { name: '', budget: '', area: '' };
+                localStorage.removeItem('clientInfo');
+                matchCategories = { '首选': [], '次选': [], '可参考': [] };
+                renderMatches();
+                saveMatchCategories();
+                showToast('🗑 已清空所有');
+            });
+
+            document.getElementById('btnGenerate').addEventListener('click', function() {
+                let total = 0;
+                for (const cat of Object.keys(matchCategories)) {
+                    total += matchCategories[cat].length;
+                }
+                if (total === 0) {
+                    showToast('⚠️ 请先匹配至少一个楼盘');
+                    return;
+                }
+                if (!clientInfo.name) {
+                    showToast('⚠️ 请填写客户姓名');
+                    return;
+                }
+                showPreviewModal();
+            });
+
+            document.getElementById('modalClose').addEventListener('click', hidePreviewModal);
+            document.getElementById('modalCancel').addEventListener('click', hidePreviewModal);
+            document.getElementById('previewModal').addEventListener('click', function(e) {
+                if (e.target === this) hidePreviewModal();
+            });
+
+            document.getElementById('modalSaveImage').addEventListener('click', async function() {
+                await downloadImage();
+            });
+
+            document.getElementById('modalShareImage').addEventListener('click', async function() {
+                await shareImage();
+            });
+
+            document.getElementById('btnViewBuildings').addEventListener('click', function() {
+                const mgr = document.getElementById('buildingManager');
+                if (mgr.style.display === 'none') {
+                    mgr.style.display = 'block';
+                    renderBuildingManager();
+                    populateManualSelect();
+                    this.textContent = '📋 收起楼盘';
+                } else {
+                    mgr.style.display = 'none';
+                    this.textContent = '📋 管理楼盘';
+                }
+            });
+
+            document.getElementById('btnCloseManager').addEventListener('click', function() {
+                document.getElementById('buildingManager').style.display = 'none';
+                document.getElementById('btnViewBuildings').textContent = '📋 管理楼盘';
+            });
+
+            document.querySelectorAll('#clientName, #clientBudget, #clientArea').forEach(inp => {
+                inp.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        document.getElementById('btnAutoMatch').click();
+                    }
+                });
+            });
+
+            window.addEventListener('beforeunload', function() {
+                saveMatchCategories();
+            });
+
+            console.log('🏠 楼盘推荐助手 v2.0 已启动！');
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
     </script>
+
 </body>
 </html>
